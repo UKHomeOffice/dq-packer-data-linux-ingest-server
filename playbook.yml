@@ -67,3 +67,45 @@
         state: directory
         mode: 0775
         recurse: yes
+
+    - name: Create ADT data directory
+      file:
+        path: /appdata/ADT/data
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT data subdirectory (1/5)
+      file:
+        path: /appdata/ADT/data/07032016acl
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT data subdirectory (2/5)
+      file:
+        path: /appdata/ADT/data/07032016oag
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT data subdirectory (3/5)
+      file:
+        path: /appdata/ADT/data/acl
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT data subdirectory (4/5)
+      file:
+        path: /appdata/ADT/data/mvt
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT data subdirectory (5/5)
+      file:
+        path: /appdata/ADT/data/oag
+        state: directory
+        mode: 0775
+        recurse: yes
