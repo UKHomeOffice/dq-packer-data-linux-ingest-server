@@ -144,3 +144,38 @@
         state: directory
         mode: 0775
         recurse: yes
+
+    - name: Create ADT stage directory
+      file:
+        path: /appdata/ADT/stage
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT stage subdirectory (1/4)
+      file:
+        path: /appdata/ADT/stage/acl
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT stage subdirectory (2/4)
+      file:
+        path: /appdata/ADT/stage/maytech
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT stage subdirectory (3/4)
+      file:
+        path: /appdata/ADT/stage/mvt
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT stage subdirectory (4/4)
+      file:
+        path: /appdata/ADT/stage/oag
+        state: directory
+        mode: 0775
+        recurse: yes
