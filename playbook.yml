@@ -1,0 +1,69 @@
+---
+
+- name: Pre-reqs for ansible to run
+  hosts: all
+  gather_facts: false
+  become: yes
+  pre_tasks:
+    - raw: test -e /usr/bin/python || ( yum -y update && yum install -y python-minimal )
+
+- name: Build Data Ingest Linux Server.
+  hosts: all
+  become: yes
+  tasks:
+    - yum: name=gcc
+    - yum: name=pcre-devel
+    - yum: name=openssl-devel
+    - yum: name=zlib-devel
+    - yum: name=wget
+    - yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
+    - yum: name=python-pip
+
+    - name: Create ADT directories
+      file:
+        path: /appdata/ADT/
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT archive directory
+      file:
+        path: /appdata/ADT/archive
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT archive subdirectory (1/5)
+      file:
+        path: /appdata/ADT/archive/07032016acl
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT archive subdirectory (2/5)
+      file:
+        path: /appdata/ADT/archive/07032016oag
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT archive subdirectory (3/5)
+      file:
+        path: /appdata/ADT/archive/acl
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT archive subdirectory (4/5)
+      file:
+        path: /appdata/ADT/archive/mvt
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create ADT archive subdirectory (5/5)
+      file:
+        path: /appdata/ADT/archive/oag
+        state: directory
+        mode: 0775
+        recurse: yes
