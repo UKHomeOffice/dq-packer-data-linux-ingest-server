@@ -138,3 +138,9 @@
         mode: 0775
         recurse: yes
 
+    - name: Create ADT scripts directory
+      file:
+        path: /appdata/ADT/scripts
+        state: directory
+        mode: 0775
+        recurse: yes
