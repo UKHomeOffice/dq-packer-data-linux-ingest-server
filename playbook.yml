@@ -194,7 +194,6 @@
         mode: 0775
         recurse: yes
 
-# @TODO: revisit after app implementation
     - name: Create EF data subdirectory
       file:
         path: /appdata/EF/data/drt
@@ -226,6 +225,90 @@
     - name: Create EF transfer directory
       file:
         path: /appdata/EF/scripts
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS directory
+      file:
+        path: /appdata/NATS
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS archive directory
+      file:
+        path: /appdata/NATS/archive
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS archive subdirectory
+      file:
+        path: /appdata/NATS/archive/nats
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS data directory
+      file:
+        path: /appdata/NATS/data
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS data subdirectory
+      file:
+        path: /appdata/NATS/data/nats
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS log directory
+      file:
+        path: /appdata/NATS/log
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS quarantine directory
+      file:
+        path: /appdata/NATS/quarantine
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS quarantine subdirectory
+      file:
+        path: /appdata/NATS/quarantine/nats
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS scripts directory
+      file:
+        path: /appdata/NATS/scripts
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS stage directory
+      file:
+        path: /appdata/NATS/stage
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS stage subdirectory (1/2)
+      file:
+        path: /appdata/NATS/stage/maytech
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create NATS stage subdirectory (2/2)
+      file:
+        path: /appdata/NATS/stage/nats
         state: directory
         mode: 0775
         recurse: yes
