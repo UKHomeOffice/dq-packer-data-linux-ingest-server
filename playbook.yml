@@ -179,3 +179,53 @@
         state: directory
         mode: 0775
         recurse: yes
+
+    - name: Create EF directory
+      file:
+        path: /appdata/EF
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create EF data directory
+      file:
+        path: /appdata/EF/data
+        state: directory
+        mode: 0775
+        recurse: yes
+
+# @TODO: revisit after app implementation
+    - name: Create EF data subdirectory
+      file:
+        path: /appdata/EF/data/drt
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create EF keys directory
+      file:
+        path: /appdata/EF/keys
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create EF log directory
+      file:
+        path: /appdata/EF/log
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create EF scripts directory
+      file:
+        path: /appdata/EF/scripts
+        state: directory
+        mode: 0775
+        recurse: yes
+
+    - name: Create EF transfer directory
+      file:
+        path: /appdata/EF/scripts
+        state: directory
+        mode: 0775
+        recurse: yes
