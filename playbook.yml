@@ -22,8 +22,10 @@
     - yum: name=python34
     - yum: name=clamav state=latest
     - yum: name=git
+    - yum: name=cloud-utils
     - pip: name=virtualenv
     - pip: name=virtualenvwrapper
+    - pip: name=AWSCLI
 
     - name: Make directory structure
       file:
@@ -80,12 +82,12 @@
       args:
         chdir: /lib
       with_items:
-        - git clone https://github.com/UKHomeOffice/data-transfer
+        - test -e /lib/data-transfer || git clone https://github.com/UKHomeOffice/data-transfer
         - python3 -m venv ~/.virtualenvs/data-transfer
         - source ~/.virtualenvs/data-transfer/bin/activate
 
     - name: Install Data Transfer dependencies
-      shell: pip install name=-e . -r requirements.txt
+      shell: pip install -e . -r requirements.txt
       args:
         chdir: /lib/data-transfer
 
@@ -94,7 +96,7 @@
       args:
         chdir: /lib/data-transfer
 
-#    @TODO: update data transfer config
+#    @TODO: update object path
     - name: GET Data Transfer config from S3 to localhost
       aws_s3:
         bucket: dq-config-bucket
@@ -113,3 +115,42 @@
       unarchive:
         src: /lib/data-transfer/data_transfer.bat.zip
         dest: /lib
+
+    - name: Download cloudwatch logs agent
+      get_url:
+        url: https://s3.amazonaws.com//aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
+        dest: /tmp/awslogs-agent-setup.py
+        mode: "+x"
+
+    - name: Cloudwatch logs config
+      copy:
+        dest: /tmp/cwlogs.conf
+        content: |
+          [general]
+          state_file = /var/awslogs/state/agent-state
+          [/var/log/messages]
+          file = /var/log/messages
+          log_group_name = /dataingest/linux
+          log_stream_name = {instance_id}
+          datetime_format = %b %d %H:%M:%S
+
+    - name: Install cloudwatch log agent
+      environment:
+        LC_ALL: C
+      shell: /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
+      args:
+        creates: /var/awslogs/etc/aws.conf
+
+    - name: Copy cloudwatch logs starter
+      copy:
+        src: startcloudwatchlogs.sh
+        dest: /usr/bin/startcloudwatchlogs.sh
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: Make Cron Job to start awslogs with right region
+      cron:
+        name: Start awslogs
+        special_time: reboot
+        job: /usr/bin/startcloudwatchlogs.sh
