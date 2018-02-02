@@ -18,7 +18,12 @@
     - yum: name=wget
     - yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
     - yum: name=python-pip
+    - yum: name=epel-release
+    - yum: name=python34
     - yum: name=clamav state=latest
+    - yum: name=git
+    - pip: name=virtualenv
+    - pip: name=virtualenvwrapper
 
     - name: Make directory structure
       file:
@@ -69,3 +74,42 @@
         - appdata/NATS/stage
         - appdata/NATS/stage/maytech
         - appdata/NATS/stage/nats
+
+    - name: Download Data Transfer from GitHub
+      shell: "{{ item }}"
+      args:
+        chdir: /lib
+      with_items:
+        - git clone https://github.com/UKHomeOffice/data-transfer
+        - python3 -m venv ~/.virtualenvs/data-transfer
+        - source ~/.virtualenvs/data-transfer/bin/activate
+
+    - name: Install Data Transfer dependencies
+      shell: pip install name=-e . -r requirements.txt
+      args:
+        chdir: /lib/data-transfer
+
+    - name: Export data-transfer path
+      shell: export PYTHONPATH=.
+      args:
+        chdir: /lib/data-transfer
+
+#    @TODO: update data transfer config
+    - name: GET Data Transfer config from S3 to localhost
+      aws_s3:
+        bucket: dq-config-bucket
+        object: /dq-data-ingest-server/data_transfer.bat.zip
+        dest: /tmp/data_transfer.bat.zip
+        mode: get
+      delegate_to: 127.0.0.1
+
+    - name: Copy Data Transfer config
+      copy:
+        src: /tmp/data_transfer.bat.zip
+        dest: /lib/data-transfer
+        mode: 0755
+
+    - name: Unzip Data Transfer config
+      unarchive:
+        src: /lib/data-transfer/data_transfer.bat.zip
+        dest: /lib
