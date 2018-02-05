@@ -160,3 +160,10 @@
         name: Start awslogs
         special_time: reboot
         job: /usr/bin/startcloudwatchlogs.sh
+
+    - name: create SSM user
+      user:
+        name: SSM
+        system: yes
+        state: present
+      register: ssmuser
