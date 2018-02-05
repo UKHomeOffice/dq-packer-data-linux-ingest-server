@@ -77,14 +77,20 @@
         - appdata/NATS/stage/maytech
         - appdata/NATS/stage/nats
 
-    - name: Download Data Transfer from GitHub
+    - name: Clone Data Transfer from Github
+      git:
+        repo: 'https://github.com/UKHomeOffice/data-transfer'
+        dest: /lib/data-transfer
+        clone: yes
+        update: no
+
+    - name: Install Data Transfer
       shell: "{{ item }}"
       args:
         chdir: /lib
       with_items:
-        - test -e /lib/data-transfer || git clone https://github.com/UKHomeOffice/data-transfer
-        - python3 -m venv ~/.virtualenvs/data-transfer
-        - source ~/.virtualenvs/data-transfer/bin/activate
+          - python3 -m venv ~/.virtualenvs/data-transfer
+          - source ~/.virtualenvs/data-transfer/bin/activate
 
     - name: Install Data Transfer dependencies
       shell: pip install -e . -r requirements.txt
