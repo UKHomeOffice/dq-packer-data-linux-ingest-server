@@ -182,9 +182,13 @@
         special_time: reboot
         job: /usr/bin/startcloudwatchlogs.sh
 
-    - name: create SSM user
-      user:
+    - name: SSM Group
+      group:
         name: SSM
         system: yes
-        state: present
-      register: ssmuser
+      register: ssmgroup
+
+    - name: Create wherescape user
+      user:
+        name: wherescape
+        group: SSM Group
