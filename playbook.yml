@@ -34,6 +34,9 @@
         mode: 0775
         recurse: yes
       with_items:
+        - ADT
+        - EF
+        - NATS
         - appdata
         - appdata/ADT
         - appdata/ADT/archive
@@ -76,6 +79,24 @@
         - appdata/NATS/stage
         - appdata/NATS/stage/maytech
         - appdata/NATS/stage/nats
+
+    - file:
+        src: /appdata/ADT
+        dest: /ADT
+        force: yes
+        state: link
+
+    - file:
+        src: /appdata/EF
+        dest: /EF
+        force: yes
+        state: link
+
+    - file:
+        src: /appdata/NATS
+        dest: /NATS
+        force: yes
+        state: link
 
     - name: Clone Data Transfer from Github
       git:
