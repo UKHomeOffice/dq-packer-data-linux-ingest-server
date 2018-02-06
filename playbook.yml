@@ -130,14 +130,7 @@
         object: /dq-data-ingest-server/data_transfer.bat.zip
         dest: /tmp/data_transfer.bat.zip
         mode: get
-      delegate_to: 127.0.0.1
-
-    - name: Copy Data Transfer config
-      copy:
-        src: /tmp/data_transfer.bat.zip
-        dest: /lib/data-transfer
-        mode: 0755
-
+        
     - name: Unzip Data Transfer config
       unarchive:
         src: /lib/data-transfer/data_transfer.bat.zip
