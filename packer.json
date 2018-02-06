@@ -40,7 +40,7 @@
           "delete_on_termination": true
         }
       ],
-      "ssh_username": "linux-user",
+      "ssh_username": "centos",
       "instance_type": "t2.medium",
       "ami_name": "dq-data-ingest-linux-server {{isotime | clean_ami_name}}",
       "ami_users": [
