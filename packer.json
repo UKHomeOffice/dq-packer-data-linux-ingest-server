@@ -1,0 +1,67 @@
+{
+  "variables": {
+    "access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `access_key`}}",
+      "secret_key": "{{user `secret_key`}}",
+      "region": "eu-west-2",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "CentOS Linux 7 x86_64 HVM*",
+          "root-device-type": "ebs"
+        },
+        "owners": [
+          "679593333241"
+        ],
+        "most_recent": true
+      },
+      "launch_block_device_mappings": [
+        {
+          "device_name": "/dev/sda1",
+          "volume_size": 80,
+          "volume_type": "gp2",
+          "delete_on_termination": true
+        },
+        {
+          "device_name": "xvdb",
+          "volume_size": 20,
+          "volume_type": "gp2",
+          "delete_on_termination": true
+        },
+        {
+          "device_name": "xvdc",
+          "volume_size": 500,
+          "volume_type": "gp2",
+          "delete_on_termination": true
+        }
+      ],
+      "instance_type": "t2.medium",
+      "ami_name": "dq-data-ingest-linux-server {{isotime | clean_ami_name}}",
+      "ami_users": [
+        "483846886818"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "./playbook.yml",
+      "ansible_env_vars": [
+        "ANSIBLE_HOST_KEY_CHECKING=False",
+        "ANSIBLE_SSH_ARGS='-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/dev/shm/cp%%h-%%p-%%r'",
+        "ANSIBLE_NOCOLOR=True"
+      ],
+      "extra_arguments": [
+        "--connection",
+        "packer",
+        "--extra-vars",
+        "ansible_shell_type=powershell ansible_shell_executable=None user_access_key={{user `access_key`}} secret_access_key={{user `secret_key`}}"
+      ]
+    }
+  ]
+}
