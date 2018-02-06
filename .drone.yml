@@ -1,0 +1,55 @@
+
+pipeline:
+
+
+  linux-packer-validate:
+    image: chrisns/packer-ansible
+    commands:
+      - export HOME=/home/packer
+      - packer validate packer.json
+
+  linux-packer-inspect:
+    image: chrisns/packer-ansible
+    commands:
+      - export HOME=/home/packer
+      - packer inspect packer.json
+
+  linux-packer-build:
+    image: chrisns/packer-ansible
+    commands:
+      - export HOME=/home/packer
+      - packer build packer.json
+    when:
+      event: push
+      branch: master
+
+  packer-copy-prod:
+    image: chrisns/packer-encrypt-copy
+    pull: true
+    commands:
+      - export filters="--owner 093401982388 --filters "Name=name,Values=dq-data-ingest-linux*""
+      - export aws_id=${PROD_ACC_ID}
+      - export aws_key=${PROD_ACC_KEY}
+      - export region=eu-west-2
+      - export HOME=/home/packer
+      - cd /home/packer
+      - ./build.sh
+    when:
+      event: push
+      branch: master
+
+  packer-copy-notprod:
+    image: chrisns/packer-encrypt-copy
+    pull: true
+    commands:
+      - export filters="--owner 093401982388 --filters "Name=name,Values=dq-data-ingest-linux*""
+      - export filters="--owner 093401982388 --filters "Name=name,Values=dq-data-ingest-linux*""
+      - export aws_id=${NOTPROD_ACC_ID}
+      - export aws_key=${NOTPROD_ACC_KEY}
+      - export region=eu-west-2
+      - export HOME=/home/packer
+      - cd /home/packer
+      - ./build.sh
+    when:
+      event: push
+      branch: master
