@@ -134,3 +134,9 @@
       user:
         name: wherescape
         group: SSM
+
+    - name: Set DNS Resolver Options
+      blockinfile:
+        path: /etc/sysconfig/network
+        block: |
+          RES_OPTIONS="rotate timeout:1 attempts:1"
