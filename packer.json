@@ -51,18 +51,8 @@
   "provisioners": [
     {
       "type": "ansible",
-      "playbook_file": "./playbook.yml",
-      "ansible_env_vars": [
-        "ANSIBLE_HOST_KEY_CHECKING=False",
-        "ANSIBLE_SSH_ARGS='-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/dev/shm/cp%%h-%%p-%%r'",
-        "ANSIBLE_NOCOLOR=True"
-      ],
-      "extra_arguments": [
-        "--connection",
-        "packer",
-        "--extra-vars",
-        "ansible_shell_type=sh ansible_shell_executable=None user_access_key={{user `access_key`}} secret_access_key={{user `secret_key`}}"
-      ]
+      "sftp_command": "/usr/libexec/openssh/sftp-server",
+      "playbook_file": "./playbook.yml"
     }
   ]
 }
