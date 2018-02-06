@@ -19,6 +19,7 @@
     - yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
     - yum: name=python-pip
     - yum: name=epel-release
+    - yum: name=postgresql-server
     - yum: name=python34
     - yum: name=clamav state=latest
     - yum: name=git
@@ -98,6 +99,12 @@
         force: yes
         state: link
 
+    - name: Start Enable Postgresql
+      shell: "{{ item }}"
+      with_items:
+          - sudo systemctl start postgresql
+          - sudo systemctl enable postgresql
+
     - name: Clone Data Transfer from Github
       git:
         repo: 'https://github.com/UKHomeOffice/data-transfer'
@@ -132,4 +139,4 @@
     - name: Create wherescape user
       user:
         name: wherescape
-        group: SSM Group
+        group: SSM
