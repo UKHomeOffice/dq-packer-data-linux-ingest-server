@@ -100,6 +100,16 @@
         force: yes
         state: link
 
+    - name: SSM Group
+      group:
+        name: SSM
+        system: yes
+
+    - name: Create wherescape user
+      user:
+        name: wherescape
+        group: SSM
+
     - name: Clone script repos from Github
       git:
         repo: '{{ item.repo }}'
@@ -156,17 +166,6 @@
       shell: export PYTHONPATH=.
       args:
         chdir: /lib/data-transfer
-
-    - name: SSM Group
-      group:
-        name: SSM
-        system: yes
-      register: ssmgroup
-
-    - name: Create wherescape user
-      user:
-        name: wherescape
-        group: SSM
 
     - name: Set DNS Resolver Options
       blockinfile:
