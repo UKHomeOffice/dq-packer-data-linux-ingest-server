@@ -107,18 +107,18 @@
         clone: yes
         update: no
       with_items:
-        - { repo: 'https://github.com/UKHomeOffice/dq_sftp-nats-dmz/', dest: '/tmp/dq_sftp-nats-dmz' }
-        - { repo: 'https://github.com/UKHomeOffice/dq-ssm_ingest/', dest: '/tmp/dq-ssm_ingest' }
+        - { repo: 'https://github.com/UKHomeOffice/dq_sftp-nats-dmz/', dest: '/opt/dq_sftp-nats-dmz' }
+        - { repo: 'https://github.com/UKHomeOffice/dq-ssm_ingest/', dest: '/opt/dq-ssm_ingest' }
 
-    - name: Move script files from tmp
-      shell: "{{ item }}"
-      args:
-          chdir: /tmp
+    - name: Symlink script files in opt
+      file:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        force: yes
+        state: link
       with_items:
-        - mv /dq_sftp-nats-dmz/NATS/scripts/* /appdata/NATS/scripts
-        - rm -rf /dq_sftp-nats-dmz
-        - mv /dq-ssm_ingest/ADT/WEB_Server/ftp_acl_web02.py /appdata/NATS/scripts
-        - rm -rf /dq-ssm_ingest
+        - { src: '/opt/dq_sftp-nats-dmz/NATS/scripts/', dest: '/appdata/NATS/scripts'}
+        - { src: '/opt/dq-ssm_ingest/ADT/WEB_Server/', dest: '/appdata/ADT/scripts'}
 
     - name: '{{ item.name }}'
       cron:
