@@ -100,6 +100,38 @@
         force: yes
         state: link
 
+    - name: Clone script repos from Github
+      git:
+        repo: '{{ item.repo }}'
+        dest: '{{ item.dest }}'
+        clone: yes
+        update: no
+      with_items:
+        - { repo: 'https://github.com/UKHomeOffice/dq_sftp-nats-dmz/', dest: '/tmp/dq_sftp-nats-dmz' }
+        - { repo: 'https://github.com/UKHomeOffice/dq-ssm_ingest/', dest: '/tmp/dq-ssm_ingest' }
+
+    - name: Move script files from tmp
+      shell: "{{ item }}"
+      args:
+          chdir: /tmp
+      with_items:
+        - mv /dq_sftp-nats-dmz/NATS/scripts/* /appdata/NATS/scripts
+        - rm -rf /dq_sftp-nats-dmz
+        - mv /dq-ssm_ingest/ADT/WEB_Server/ftp_acl_web02.py /appdata/NATS/scripts
+        - rm -rf /dq-ssm_ingest
+
+    - name: '{{ item.name }}'
+      cron:
+        user: '{{ item.user }}'
+        minute: '{{ item.minute }}'
+        hour: '{{ item.hour }}'
+        day: '{{ item.day }}'
+        job: '{{ item.job }}'
+      with_items:
+          - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*",  hour: "/1", day: "*",  job: "cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
+          - { name: Cron nats_house_keeping, user: wherescape, minute: "*",  hour: "/45", day: "*", job: "/NATS/scripts/nats_house_keeping.sh > /dev/null 2> /dev/null" }
+          - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*",  hour: "/10", day: "0",  job: "/ADT/scripts/ftp_acl_web02.py" }
+
     - name: Clone Data Transfer from Github
       git:
         repo: 'https://github.com/UKHomeOffice/data-transfer'
