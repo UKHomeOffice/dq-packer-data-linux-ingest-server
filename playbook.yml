@@ -162,6 +162,7 @@
           - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: "cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
           - { name: Cron nats_house_keeping, user: wherescape, minute: "*/45",  hour: "*", day: "*", job: "/NATS/scripts/nats_house_keeping.sh > /dev/null 2> /dev/null" }
           - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: "/ADT/scripts/ftp_acl_web02.py" }
+          - { name: Cron freshclam, user: wherescape, minute: "0",  hour: "10", day: "*",  job: "sudo freshclam" }
 
     - name: Set DNS Resolver Options
       blockinfile:
