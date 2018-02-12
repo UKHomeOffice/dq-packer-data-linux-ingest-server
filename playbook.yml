@@ -20,8 +20,8 @@
         - zlib-devel
         - wget
         - https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
-        - python-pip
         - epel-release
+        - python-pip
         - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
         - postgresql96
         - clamav-server
