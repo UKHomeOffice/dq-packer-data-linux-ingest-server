@@ -11,25 +11,43 @@
   hosts: all
   become: yes
   tasks:
-    - yum: name=gcc
-    - yum: name=pcre-devel
-    - yum: name=openssl-devel
-    - yum: name=zlib-devel
-    - yum: name=wget
-    - yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
-    - yum: name=python-pip
-    - yum: name=epel-release
-    - yum: name=https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
-    - yum: name=postgresql96
-    - yum: name=centos-release-scl
-    - yum: name=python27
-    - yum: name=clamav state=latest
-    - yum: name=git
-    - yum: name=cloud-utils
-    - pip: name=virtualenv
-    - pip: name=virtualenvwrapper
-    - pip: name=AWSCLI
-    - pip: name=ftputil
+    - name: Yum Install Dependencies
+      yum: 'name={{ item }}'
+      with_items:
+        - gcc
+        - pcre-devel
+        - openssl-devel
+        - zlib-devel
+        - wget
+        - https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
+        - python-pip
+        - epel-release
+        - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+        - postgresql96
+        - clamav-server
+        - clamav-data
+        - clamav-update
+        - clamav-filesystem
+        - clamav
+        - clamav-scanner-systemd
+        - clamav-devel
+        - clamav-lib
+        - clamav-server-systemd
+        - python27
+        - git
+        - cloud-utils
+
+    - name: Pip Install Dependencies
+      pip: 'name={{ item }}'
+      with_items:
+        - virtualenv
+        - AWSCLI
+        - ftputil
+
+    - name: Dependency Configurations
+      shell: '{{ item }}'
+      with_items:
+        - sudo freshclam
 
     - name: Make directory structure
       file:
