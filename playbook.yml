@@ -94,12 +94,12 @@
         - appdata/NATS/archive/nats
         - appdata/NATS/data
         - appdata/NATS/data/nats
+        - appdata/NATS/data/ga
         - appdata/NATS/log
         - appdata/NATS/quarantine
         - appdata/NATS/quarantine/nats
         - appdata/NATS/scripts
         - appdata/NATS/stage
-        - appdata/NATS/stage/ga
         - appdata/NATS/stage/maytech
         - appdata/NATS/stage/nats
 
