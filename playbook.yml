@@ -99,6 +99,7 @@
         - appdata/NATS/quarantine/nats
         - appdata/NATS/scripts
         - appdata/NATS/stage
+        - appdata/NATS/stage/ga
         - appdata/NATS/stage/maytech
         - appdata/NATS/stage/nats
 
