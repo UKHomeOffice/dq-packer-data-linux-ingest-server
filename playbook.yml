@@ -48,19 +48,48 @@
       - yum update -y
       - yum install -y postgresql96
 
+  - name: ClamAV Install Packages
+    shell: '{{ item }}'
+    with_items:
+       - yum -y install clamav-server clamav-data clamav-update clamav-filesystem clamav clamav-scanner-systemd clamav-devel clamav-lib clamav-server-systemd
+
+  - name: ClamAV SELinux configuration
+    shell: '{{ item }}'
+    with_items:
+      - setenforce 0
+      - setsebool -P antivirus_can_scan_system 1
+      - setsebool -P clamd_use_jit 0
+
+  - name: ClamAV configuration
+    shell: '{{ item }}'
+    with_items:
+      - cp /etc/clamd.d/scan.conf /etc/clamd.d/scan.conf.backup
+      - sed -i -e "s/^Example/#Example/" /etc/clamd.d/scan.conf
+# pull in /etc/clamd.d/scan.conf
+      - cp /etc/clamd.d/scan.conf /etc/clamd.conf
+
+  - name: Freshclam configuration
+    shell: '{{ item }}'
+    with_items:
+      - cp /etc/freshclam.conf /etc/freshclam.conf.bakup
+      - sed -i -e "s/^Example/#Example/" /etc/freshclam.conf
+# pull in /usr/lib/systemd/system/freshclam.service
+      - systemctl start freshclam
+      - systemctl enable freshclam
+
+  - name: ClamAV addition configuration
+    shell: '{{ item }}'
+    with_items:
+      - cp /usr/share/clamav/template/existing clamd.conf /etc/clamd.d/clamd.conf
+      - chmod -u wherescape 755 /var/lib/clamav/
+  #    - name: Add Wherescape to virusgroup
+  #    usermod -g virusgroup wherescape
+  #
+  #    - name: Add Wherescape to /var/run/
+
   - name: Yum Install Dependencies
     yum: name={{ item }}
     with_items:
-      - python-pip
-      - clamav-server
-      - clamav-data
-      - clamav-update
-      - clamav-filesystem
-      - clamav
-      - clamav-scanner-systemd
-      - clamav-devel
-      - clamav-lib
-      - clamav-server-systemd
       - git
       - cloud-utils
 
@@ -159,22 +188,6 @@
       name: wherescape
       group: SSM
 
-#    - name: Copy ClamAV config
-#      shell: cp /usr/share/clamav/template/existing clamd.conf /etc/clamd.d/clamd.conf
-#
-#    - name: Copy ClamAV config
-#      shell: chmod -u wherescape 755 /var/lib/clamav/
-#
-#    - name: Copy Freshclam cron
-
-#    - name: copy new clam conf
-# cp /etc/clamd.d/scan.conf /etc/clamd.conf
-#
-#    - name: Add Wherescape to virusgroup
-#    usermod -g virusgroup wherescape
-#
-#    - name: Add Wherescape to /var/run/
-
   - name: Clone script repos from Github
     git:
       repo: '{{ item.repo }}'
@@ -206,7 +219,7 @@
         - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: "cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
         - { name: Cron nats_house_keeping, user: wherescape, minute: "*/45",  hour: "*", day: "*", job: "/NATS/scripts/nats_house_keeping.sh > /dev/null 2> /dev/null" }
         - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: "/ADT/scripts/ftp_acl_web02.py" }
-          # - { name: Cron freshclam, user: root, minute: "0",  hour: "10", day: "*",  job: "sudo freshclam" }
+        - { name: Cron freshclam, user: wherescape, minute: "0", hour: "01,13", day: "*", job: "/usr/bin/freshclam --quiet" }
 
   - name: Set DNS Resolver Options
     blockinfile:
