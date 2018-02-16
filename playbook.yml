@@ -22,6 +22,12 @@
       - zlib-devel
       - wget
 
+  - name: Yum update
+    shell: '{{ item }}'
+    with_items:
+      -  yum -y update
+      -  yum clean all
+
   - name: Install Python 2.7
     shell: '{{ item }}'
     args:
