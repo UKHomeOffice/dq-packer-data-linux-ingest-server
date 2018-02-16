@@ -35,12 +35,17 @@
     args:
       chdir: /usr/src/Python-2.7.10
 
+  - name: Install Postgresql 9.6
+    shell: '{{ item }}'
+    with_items:
+      - rpm -ivh https://yum.postgresql.org/9.6/redhat/rhel-7.3-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+      - yum update -y
+      - yum install -y postgresql96
+
   - name: Yum Install Dependencies
     yum: name={{ item }}
     with_items:
-      - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
       - python-pip
-      - postgresql96
       - clamav-server
       - clamav-data
       - clamav-update
