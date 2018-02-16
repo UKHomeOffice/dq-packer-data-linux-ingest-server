@@ -11,161 +11,194 @@
   hosts: all
   become: yes
   tasks:
-    - name: Yum Install Dependencies
-      yum: 'name={{ item }}'
-      with_items:
-        - gcc
-        - pcre-devel
-        - openssl-devel
-        - zlib-devel
-        - wget
-        - https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
-        - epel-release
-        - python27
-        - python-pip
-        - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
-        - postgresql96
-        - clamav-server
-        - clamav-data
-        - clamav-update
-        - clamav-filesystem
-        - clamav
-        - clamav-scanner-systemd
-        - clamav-devel
-        - clamav-lib
-        - clamav-server-systemd
-        - git
-        - cloud-utils
+  - name: Pre Dependencies
+    yum: name={{ item }}
+    with_items:
+      - https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
+      - epel-release
+      - gcc
+      - pcre-devel
+      - openssl-devel
+      - zlib-devel
+      - wget
 
-    - name: Pip Install Dependencies
-      pip: 'name={{ item }}'
-      with_items:
-        - virtualenv
-        - AWSCLI
-        - ftputil
+  - name: Install Python 2.7
+    shell: '{{ item }}'
+    args:
+      chdir: /usr/src
+    with_items:
+      - wget https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz
+      - tar xzf Python-2.7.10.tgz
 
-    - name: Dependency Configurations
-      shell: '{{ item }}'
-      with_items:
-        - sudo freshclam
+  - name: Configure Python 2.7
+    shell: ./configure
+    args:
+      chdir: /usr/src/Python-2.7.10
 
-    - name: Make directory structure
-      file:
-        path: /{{ item }}
-        state: directory
-        mode: 0775
-        recurse: yes
-      with_items:
-        - ADT
-        - EF
-        - NATS
-        - appdata
-        - appdata/ADT
-        - appdata/ADT/archive
-        - appdata/ADT/archive/07032016acl
-        - appdata/ADT/archive/07032016oag
-        - appdata/ADT/archive/acl
-        - appdata/ADT/archive/mvt
-        - appdata/ADT/archive/oag
-        - appdata/ADT/data
-        - appdata/ADT/data/07032016acl
-        - appdata/ADT/data/07032016oag
-        - appdata/ADT/data/acl
-        - appdata/ADT/data/mvt
-        - appdata/ADT/data/oag
-        - appdata/ADT/quarantine
-        - appdata/ADT/quarantine/acl
-        - appdata/ADT/quarantine/mvt
-        - appdata/ADT/quarantine/oag
-        - appdata/ADT/scripts
-        - appdata/ADT/stage
-        - appdata/ADT/stage/acl
-        - appdata/ADT/stage/maytech
-        - appdata/ADT/stage/mvt
-        - appdata/ADT/stage/oag
-        - appdata/EF
-        - appdata/EF/data
-        - appdata/EF/data/drt
-        - appdata/EF/keys
-        - appdata/EF/log
-        - appdata/EF/scripts
-        - appdata/NATS
-        - appdata/NATS/archive
-        - appdata/NATS/archive/nats
-        - appdata/NATS/data
-        - appdata/NATS/data/nats
-        - appdata/NATS/data/ga
-        - appdata/NATS/log
-        - appdata/NATS/quarantine
-        - appdata/NATS/quarantine/nats
-        - appdata/NATS/scripts
-        - appdata/NATS/stage
-        - appdata/NATS/stage/maytech
-        - appdata/NATS/stage/nats
+  - name: Yum Install Dependencies
+    yum: name={{ item }}
+    with_items:
+      - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+      - python-pip
+      - postgresql96
+      - clamav-server
+      - clamav-data
+      - clamav-update
+      - clamav-filesystem
+      - clamav
+      - clamav-scanner-systemd
+      - clamav-devel
+      - clamav-lib
+      - clamav-server-systemd
+      - git
+      - cloud-utils
 
-    - file:
-        src: /appdata/ADT
-        dest: /ADT
-        force: yes
-        state: link
+  - name: Pip Install Dependencies
+    pip: 'name={{ item }}'
+    with_items:
+      - virtualenv
+      - AWSCLI
+      - ftputil
 
-    - file:
-        src: /appdata/EF
-        dest: /EF
-        force: yes
-        state: link
+  - name: Dependency Configurations
+    shell: '{{ item }}'
+    with_items:
+      - sudo freshclam
+      - setenforce 0
 
-    - file:
-        src: /appdata/NATS
-        dest: /NATS
-        force: yes
-        state: link
+  - name: Make directory structure
+    file:
+      path: /{{ item }}
+      state: directory
+      mode: 0775
+      recurse: yes
+    with_items:
+      - ADT
+      - EF
+      - NATS
+      - appdata
+      - appdata/ADT
+      - appdata/ADT/archive
+      - appdata/ADT/archive/07032016acl
+      - appdata/ADT/archive/07032016oag
+      - appdata/ADT/archive/acl
+      - appdata/ADT/archive/mvt
+      - appdata/ADT/archive/oag
+      - appdata/ADT/data
+      - appdata/ADT/data/07032016acl
+      - appdata/ADT/data/07032016oag
+      - appdata/ADT/data/acl
+      - appdata/ADT/data/mvt
+      - appdata/ADT/data/oag
+      - appdata/ADT/quarantine
+      - appdata/ADT/quarantine/acl
+      - appdata/ADT/quarantine/mvt
+      - appdata/ADT/quarantine/oag
+      - appdata/ADT/scripts
+      - appdata/ADT/stage
+      - appdata/ADT/stage/acl
+      - appdata/ADT/stage/maytech
+      - appdata/ADT/stage/mvt
+      - appdata/ADT/stage/oag
+      - appdata/EF
+      - appdata/EF/data
+      - appdata/EF/data/drt
+      - appdata/EF/keys
+      - appdata/EF/log
+      - appdata/EF/scripts
+      - appdata/NATS
+      - appdata/NATS/archive
+      - appdata/NATS/archive/nats
+      - appdata/NATS/data
+      - appdata/NATS/data/nats
+      - appdata/NATS/data/ga
+      - appdata/NATS/log
+      - appdata/NATS/quarantine
+      - appdata/NATS/quarantine/nats
+      - appdata/NATS/scripts
+      - appdata/NATS/stage
+      - appdata/NATS/stage/maytech
+      - appdata/NATS/stage/nats
 
-    - name: SSM Group
-      group:
-        name: SSM
-        system: yes
+  - file:
+      src: /appdata/ADT
+      dest: /ADT
+      force: yes
+      state: link
 
-    - name: Create wherescape user
-      user:
-        name: wherescape
-        group: SSM
+  - file:
+      src: /appdata/EF
+      dest: /EF
+      force: yes
+      state: link
 
-    - name: Clone script repos from Github
-      git:
-        repo: '{{ item.repo }}'
-        dest: '{{ item.dest }}'
-        clone: yes
-        update: no
-      with_items:
-        - { repo: 'https://github.com/UKHomeOffice/dq_sftp-nats-dmz/', dest: '/opt/dq_sftp-nats-dmz' }
-        - { repo: 'https://github.com/UKHomeOffice/dq-ssm_ingest/', dest: '/opt/dq-ssm_ingest' }
+  - file:
+      src: /appdata/NATS
+      dest: /NATS
+      force: yes
+      state: link
 
-    - name: Symlink script files in opt
-      file:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-        force: yes
-        state: link
-      with_items:
-        - { src: '/opt/dq_sftp-nats-dmz/NATS/scripts/', dest: '/appdata/NATS/scripts'}
-        - { src: '/opt/dq-ssm_ingest/ADT/WEB_Server/', dest: '/appdata/ADT/scripts'}
+  - name: SSM Group
+    group:
+      name: SSM
+      system: yes
 
-    - name: '{{ item.name }}'
-      cron:
-        user: '{{ item.user }}'
-        minute: '{{ item.minute }}'
-        hour: '{{ item.hour }}'
-        day: '{{ item.day }}'
-        job: '{{ item.job }}'
-      with_items:
-          - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: "cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
-          - { name: Cron nats_house_keeping, user: wherescape, minute: "*/45",  hour: "*", day: "*", job: "/NATS/scripts/nats_house_keeping.sh > /dev/null 2> /dev/null" }
-          - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: "/ADT/scripts/ftp_acl_web02.py" }
-          - { name: Cron freshclam, user: wherescape, minute: "0",  hour: "10", day: "*",  job: "sudo freshclam" }
+  - name: Create wherescape user
+    user:
+      name: wherescape
+      group: SSM
 
-    - name: Set DNS Resolver Options
-      blockinfile:
-        path: /etc/sysconfig/network
-        block: |
-          RES_OPTIONS="rotate timeout:1 attempts:1"
+#    - name: Copy ClamAV config
+#      shell: cp /usr/share/clamav/template/existing clamd.conf /etc/clamd.d/clamd.conf
+#
+#    - name: Copy ClamAV config
+#      shell: chmod -u wherescape 755 /var/lib/clamav/
+#
+#    - name: Copy Freshclam cron
+
+#    - name: copy new clam conf
+# cp /etc/clamd.d/scan.conf /etc/clamd.conf
+#
+#    - name: Add Wherescape to virusgroup
+#    usermod -g virusgroup wherescape
+#
+#    - name: Add Wherescape to /var/run/
+
+  - name: Clone script repos from Github
+    git:
+      repo: '{{ item.repo }}'
+      dest: '{{ item.dest }}'
+      clone: yes
+      update: no
+    with_items:
+      - { repo: 'https://github.com/UKHomeOffice/dq_sftp-nats-dmz/', dest: '/opt/dq_sftp-nats-dmz' }
+      - { repo: 'https://github.com/UKHomeOffice/dq-ssm_ingest/', dest: '/opt/dq-ssm_ingest' }
+
+  - name: Symlink script files in opt
+    file:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      force: yes
+      state: link
+    with_items:
+      - { src: '/opt/dq_sftp-nats-dmz/NATS/scripts/', dest: '/appdata/NATS/scripts'}
+      - { src: '/opt/dq-ssm_ingest/ADT/WEB_Server/', dest: '/appdata/ADT/scripts'}
+
+  - name: '{{ item.name }}'
+    cron:
+      user: '{{ item.user }}'
+      minute: '{{ item.minute }}'
+      hour: '{{ item.hour }}'
+      day: '{{ item.day }}'
+      job: '{{ item.job }}'
+    with_items:
+        - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: "cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
+        - { name: Cron nats_house_keeping, user: wherescape, minute: "*/45",  hour: "*", day: "*", job: "/NATS/scripts/nats_house_keeping.sh > /dev/null 2> /dev/null" }
+        - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: "/ADT/scripts/ftp_acl_web02.py" }
+          # - { name: Cron freshclam, user: root, minute: "0",  hour: "10", day: "*",  job: "sudo freshclam" }
+
+  - name: Set DNS Resolver Options
+    blockinfile:
+      path: /etc/sysconfig/network
+      block: |
+        RES_OPTIONS="rotate timeout:1 attempts:1"
