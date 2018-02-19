@@ -151,12 +151,16 @@
       - setsebool -P antivirus_can_scan_system 1
       - setsebool -P clamd_use_jit 0
 
-  - name: ClamAV configuration
-    shell: '{{ item }}'
-    with_items:
-      - yes | cp /tmp/install/scan.conf /etc/clamd.d/scan.conf
-      - cp /etc/clamd.d/scan.conf /etc/clamd.d/scan.conf.backup
-      - cp /etc/clamd.d/scan.conf /etc/clamd.conf
+  - name: ClamAV Configuration
+    copy:
+      src: '/tmp/install/scan.conf'
+      dest: '{{ item }}'
+      remote_src: yes
+      force: yes
+      with_items:
+        - /etc/clamd.d/scan.conf
+        - /etc/clamd.d/scan.conf.backup
+        - /etc/clamd.conf
 
 #      - sed -i -e "s/^Example/#Example/" /etc/clamd.d/scan.conf
 #      - cp /usr/share/clamav/template/existing clamd.conf /etc/clamd.d/clamd.conf
