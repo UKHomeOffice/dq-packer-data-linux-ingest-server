@@ -158,10 +158,10 @@
       dest: '{{ item }}'
       remote_src: yes
       force: yes
-      with_items:
-        - /etc/clamd.d/scan.conf
-        - /etc/clamd.d/scan.conf.backup
-        - /etc/clamd.conf
+    with_items:
+      - /etc/clamd.d/scan.conf
+      - /etc/clamd.d/scan.conf.backup
+      - /etc/clamd.conf
 
 #      - sed -i -e "s/^Example/#Example/" /etc/clamd.d/scan.conf
 #      - cp /usr/share/clamav/template/existing clamd.conf /etc/clamd.d/clamd.conf
@@ -175,7 +175,7 @@
       src: '{{ item.source }}'
       dest: '{{ item.dest }}'
     with_items:
-      - { source: /etc/freshclam.conf, dest: /etc/freshclam.conf.bakup }
+      - { source: /etc/freshclam.conf, dest: /etc/freshclam.conf.backup }
       - { source: /tmp/install/freshclam.service, dest: /usr/lib/systemd/system/freshclam.service }
 
   - name: Freshclam Additional Configuration
@@ -192,15 +192,17 @@
       day: "*"
       job: "/usr/bin/freshclam --quiet"
 
-  - service:
-      name: Service Freshclam ClamAV
-      pattern: '{{ item.pattern }}'
-      state: '{{ item.state }}'
-      with_items:
-        - { pattern: '/lib/systemd/system/freshclam.service', state: started }
-        - { pattern: '/lib/systemd/system/freshclam.service', state: enabled }
-        - { pattern: '/lib/systemd/system/clamd@scan.service', state: started }
-        - { pattern: '/lib/systemd/system/clamd@scan.service', state: enabled }
+  - name: Start, Enable Freshclam
+    shell: '{{ item }}'
+    with_items:
+      - systemctl start freshclam
+      - systemctl enable freshclam
+
+  - name: Start, Enable Clamd
+    shell: '{{ item }}'
+    with_items:
+      - systemctl start clamd@scan
+      - systemctl enable clamd@scan
 
   - name: Install Data Transfer
     pip: 'name=data-transfer'
@@ -246,7 +248,7 @@
         - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: "cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
         - { name: Cron nats_house_keeping, user: wherescape, minute: "*/45",  hour: "*", day: "*", job: "/NATS/scripts/nats_house_keeping.sh > /dev/null 2> /dev/null" }
         - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: "/ADT/scripts/ftp_acl_web02.py" }
-        - { name: Cron Data Transfer, user: wherescape, minute: "1",  hour: "*", day: "*",  job: "pm2 start ecosystem.config.js --only data-transfer" }
+        - { name: Cron Data Transfer, user: wherescape, minute: "1",  hour: "*", day: "*",  job: "pm2 start /usr/lib/python2.7/site-packages/datatransfer/ecosystem.config.js --only data-transfer" }
 
   - name: Set DNS Resolver Options
     blockinfile:
