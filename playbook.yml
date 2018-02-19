@@ -210,6 +210,11 @@
       name: pm2
       global: yes
 
+  - name: Data Transfer Configuration
+    copy:
+      src: '/tmp/install/ecosystem.config.js'
+      dest: '/usr/lib/python2.7/site-packages/datatransfer/ecosystem.config.js'
+
   - name: Clone script repos from Github
     git:
       repo: '{{ item.repo }}'
@@ -241,6 +246,7 @@
         - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: "cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
         - { name: Cron nats_house_keeping, user: wherescape, minute: "*/45",  hour: "*", day: "*", job: "/NATS/scripts/nats_house_keeping.sh > /dev/null 2> /dev/null" }
         - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: "/ADT/scripts/ftp_acl_web02.py" }
+        - { name: Cron Data Transfer, user: wherescape, minute: "1",  hour: "*", day: "*",  job: "pm2 start ecosystem.config.js --only data-transfer" }
 
   - name: Set DNS Resolver Options
     blockinfile:
