@@ -169,12 +169,18 @@
 #      - usermod -g virusgroup wherescape
 #      - name: Add Wherescape to /var/run/
 
-  - name: Freshclam configuration
+  - name: Freshclam Configuration Files
+    copy:
+      src: '{{ item.source }}'
+      dest: '{{ item.dest }}'
+    with_items:
+      - { source: /etc/freshclam.conf, dest: /etc/freshclam.conf.bakup }
+      - { source: /tmp/install/freshclam.service, dest: /usr/lib/systemd/system/freshclam.service }
+
+  - name: Freshclam Additional Configuration
     shell: '{{ item }}'
     with_items:
-      - cp /etc/freshclam.conf /etc/freshclam.conf.bakup
       - sed -i -e "s/^Example/#Example/" /etc/freshclam.conf
-      - cp /tmp/install/freshclam.service /usr/lib/systemd/system/freshclam.service
       - freshclam
 
   - name: Cron Freshclam
