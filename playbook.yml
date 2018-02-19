@@ -105,6 +105,7 @@
       - wget
       - git
       - cloud-utils
+      - nodejs
 
   - name: Pip Install Dependencies
     pip: 'name={{ item }}'
@@ -203,6 +204,11 @@
 
   - name: Install Data Transfer
     pip: 'name=data-transfer'
+
+  - name: Install Data Transfer Dependencies
+    npm:
+      name: pm2
+      global: yes
 
   - name: Clone script repos from Github
     git:
