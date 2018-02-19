@@ -201,6 +201,9 @@
         - { pattern: '/lib/systemd/system/clamd@scan.service', state: started }
         - { pattern: '/lib/systemd/system/clamd@scan.service', state: enabled }
 
+  - name: Install Data Transfer
+    pip: 'name=data-transfer'
+
   - name: Clone script repos from Github
     git:
       repo: '{{ item.repo }}'
