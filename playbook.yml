@@ -191,17 +191,15 @@
       day: "*"
       job: "/usr/bin/freshclam --quiet"
 
-  - name: Start, Enable Freshclam
-    shell: '{{ item }}'
-    with_items:
-      - systemctl start freshclam
-      - systemctl enable freshclam
-
-  - name: Start, Enable Clamd
-    shell: '{{ item }}'
-    with_items:
-      - systemctl start clamd@scan
-      - systemctl enable clamd@scan
+  - service:
+      name: Service Freshclam ClamAV
+      pattern: '{{ item.pattern }}'
+      state: '{{ item.state }}'
+      with_items:
+        - { pattern: '/lib/systemd/system/freshclam.service', state: started }
+        - { pattern: '/lib/systemd/system/freshclam.service', state: enabled }
+        - { pattern: '/lib/systemd/system/clamd@scan.service', state: started }
+        - { pattern: '/lib/systemd/system/clamd@scan.service', state: enabled }
 
   - name: Clone script repos from Github
     git:
