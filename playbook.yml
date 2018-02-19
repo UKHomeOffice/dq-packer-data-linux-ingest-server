@@ -123,6 +123,7 @@
     shell: ./configure
     args:
       chdir: /usr/src/Python-2.7.10
+    creates: /usr/src/Python-2.7.10/Modules
 
   - name: GET config files from DQ-config-bucket
     shell: '{{ item }}'
