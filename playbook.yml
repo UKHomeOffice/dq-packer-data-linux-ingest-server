@@ -17,6 +17,8 @@
       state: directory
       mode: 0775
       recurse: yes
+       owner: wherescape
+       group: ssm
     with_items:
       - ADT
       - EF
@@ -211,26 +213,40 @@
       - systemctl start clamd@scan
       - systemctl enable clamd@scan
 
-  - name: Install Data Transfer
-    pip: 'name=data-transfer'
+  - name: Clone Data Transfer from Github
+    git:
+      repo: https://github.com/UKHomeOffice/data-transfer
+      dest: 'appdata/'
+      version: 1.5.0
+      force: yes
+    become: true
+    become_user: wherescape
+    tags: clone_release
 
   - name: Npm Install Data Transfer Dependencies
     npm:
       name: pm2
       global: yes
 
-  - name: Pip Install Data Transfer Dependencies
-    pip: 'name={{ item }}'
-    with_items:
-      - pathlib==1.0.1
-      - boto3==1.4.8
-      - schedule==0.5.0
-      - paramiko==2.4.0
+  - name: Configure Data Transfer
+    shell: python2.7 -m virtualenv ~/.virtualenvs/data-transfer && \
+           source ~/.virtualenvs/data-transfer/bin/activate && \
+           pip install -r requirements.txt
+
+  - name: Check PM2 Startup Script is present
+    command: pm2 startup -u wherescape --hp /home/wherescape
+    args:
+      creates: /etc/init.d/pm2-wherescape
+    tags: pm2_startup_script
 
   - name: Data Transfer Configuration
     copy:
       src: '/tmp/install/ecosystem.config.js'
-      dest: '/usr/lib/python2.7/site-packages/datatransfer/ecosystem.config.js'
+      dest: '/opt/apps/data-transfer/ecosystem.config.js'
+
+  - name: Start Data Transfer
+    shell: source ~/.virtualenvs/data-transfer/bin/activate && \
+           pm2 start -u wherescape ecosystem.config.js
 
   - name: Clone script repos from Github
     git:
