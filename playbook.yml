@@ -211,10 +211,18 @@
   - name: Install Data Transfer
     pip: 'name=data-transfer'
 
-  - name: Install Data Transfer Dependencies
+  - name: Npm Install Data Transfer Dependencies
     npm:
       name: pm2
       global: yes
+
+  - name: Pip Install Data Transfer Dependencies
+    pip: 'name={{ item }}'
+    with_items:
+      - pathlib==1.0.1
+      - boto3==1.4.8
+      - schedule==0.5.0
+      - paramiko==2.4.0
 
   - name: Data Transfer Configuration
     copy:
