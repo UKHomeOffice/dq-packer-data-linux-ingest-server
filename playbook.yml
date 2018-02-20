@@ -11,14 +11,24 @@
   hosts: all
   become: yes
   tasks:
+  - name: SSM Group
+    group:
+      name: SSM
+      system: yes
+
+  - name: Create wherescape user
+    user:
+      name: wherescape
+      group: SSM
+
   - name: Make directory structure
     file:
       path: /{{ item }}
       state: directory
       mode: 0775
       recurse: yes
-       owner: wherescape
-       group: ssm
+      owner: wherescape
+      group: SSM
     with_items:
       - ADT
       - EF
@@ -71,29 +81,25 @@
       src: /appdata/ADT
       dest: /ADT
       force: yes
+      owner: wherescape
+      group: SSM
       state: link
 
   - file:
       src: /appdata/EF
       dest: /EF
       force: yes
+      owner: wherescape
+      group: SSM
       state: link
 
   - file:
       src: /appdata/NATS
       dest: /NATS
       force: yes
-      state: link
-
-  - name: SSM Group
-    group:
-      name: SSM
-      system: yes
-
-  - name: Create wherescape user
-    user:
-      name: wherescape
+      owner: wherescape
       group: SSM
+      state: link
 
   - name: Yum Install Pre Dependencies
     yum: name={{ item }}
@@ -104,6 +110,7 @@
       - openssl-devel
       - zlib-devel
       - wget
+    become: true
 
   - name: Yum Install Dependencies
     yum: name={{ item }}
@@ -216,11 +223,8 @@
   - name: Clone Data Transfer from Github
     git:
       repo: https://github.com/UKHomeOffice/data-transfer
-      dest: 'appdata/'
-      version: 1.5.0
+      dest: '/appdata/data-transfer'
       force: yes
-    become: true
-    become_user: wherescape
     tags: clone_release
 
   - name: Npm Install Data Transfer Dependencies
@@ -231,7 +235,7 @@
   - name: Configure Data Transfer
     shell: python2.7 -m virtualenv ~/.virtualenvs/data-transfer && \
            source ~/.virtualenvs/data-transfer/bin/activate && \
-           pip install -r requirements.txt
+           pip install -r /appdata/data-transfer/requirements.txt
 
   - name: Check PM2 Startup Script is present
     command: pm2 startup -u wherescape --hp /home/wherescape
@@ -242,7 +246,7 @@
   - name: Data Transfer Configuration
     copy:
       src: '/tmp/install/ecosystem.config.js'
-      dest: '/opt/apps/data-transfer/ecosystem.config.js'
+      dest: '/appdata/data-transfer/ecosystem.config.js'
 
   - name: Start Data Transfer
     shell: source ~/.virtualenvs/data-transfer/bin/activate && \
@@ -286,3 +290,4 @@
       path: /etc/sysconfig/network
       block: |
         RES_OPTIONS="rotate timeout:1 attempts:1"
+        
