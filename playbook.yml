@@ -93,16 +93,20 @@
       name: wherescape
       group: SSM
 
-  - name: Yum Install Dependencies
+  - name: Yum Install Pre Dependencies
     yum: name={{ item }}
     with_items:
       - epel-release
-      - python-pip
       - gcc
       - pcre-devel
       - openssl-devel
       - zlib-devel
       - wget
+
+  - name: Yum Install Dependencies
+    yum: name={{ item }}
+    with_items:
+      - python-pip
       - git
       - cloud-utils
       - nodejs
