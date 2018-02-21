@@ -1,0 +1,16 @@
+- name: Build Data Ingest Linux Server.
+  hosts: all
+  become: true
+  tasks:
+    - include: playbook-00-pre-requisites.yml
+    - include: playbook-01-user-groups.yml
+    - include: playbook-02-directory-structure.yml
+    - include: playbook-03-yum-install.yml
+    - include: playbook-04-pip-install.yml
+    - include: playbook-05-install-python.yml
+    - include: playbook-06-get-config-files-from-s3.yml
+    - include: playbook-07-install-postgres.yml
+    - include: playbook-08-install-clamAV.yml
+    - include: playbook-09-install-data-transfer.yml
+    - include: playbook-10-install-nats-scripts.yml
+    - include: playbook-11-set-dns-resolver-options.yml
