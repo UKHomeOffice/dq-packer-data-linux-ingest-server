@@ -27,8 +27,6 @@
       state: directory
       mode: 0775
       recurse: yes
-      owner: wherescape
-      group: SSM
     with_items:
       - ADT
       - EF
@@ -81,24 +79,18 @@
       src: /appdata/ADT
       dest: /ADT
       force: yes
-      owner: wherescape
-      group: SSM
       state: link
 
   - file:
       src: /appdata/EF
       dest: /EF
       force: yes
-      owner: wherescape
-      group: SSM
       state: link
 
   - file:
       src: /appdata/NATS
       dest: /NATS
       force: yes
-      owner: wherescape
-      group: SSM
       state: link
 
   - name: Yum Install Pre Dependencies
