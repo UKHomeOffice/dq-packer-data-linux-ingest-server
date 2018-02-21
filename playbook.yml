@@ -200,17 +200,17 @@
       day: "*"
       job: "/usr/bin/freshclam --quiet"
 
-   - name: Start, Enable Freshclam
-     shell: '{{ item }}'
-     with_items:
-       - systemctl start freshclam
-       - systemctl enable freshclam
+  - name: Start, Enable Freshclam
+    shell: '{{ item }}'
+    with_items:
+      - systemctl start freshclam
+      - systemctl enable freshclam
 
-   - name: Start, Enable Clamd
-     shell: '{{ item }}'
-     with_items:
-       - systemctl start clamd@scan
-       - systemctl enable clamd@scan
+  - name: Start, Enable Clamd
+    shell: '{{ item }}'
+    with_items:
+      - systemctl start clamd@scan
+      - systemctl enable clamd@scan
 
   - name: Clone Data Transfer from Github
     git:
