@@ -1,0 +1,12 @@
+---
+- name: Install Postgresql
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Install Postgresql 9.6
+    shell: '{{ item }}'
+    with_items:
+      - rpm -ivh https://yum.postgresql.org/9.6/redhat/rhel-7.3-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+      - yum update -y
+      - yum install -y postgresql96

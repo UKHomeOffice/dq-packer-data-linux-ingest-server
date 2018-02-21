@@ -1,0 +1,7 @@
+---
+- name: Pre-reqs for ansible to run
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - raw: test -e /usr/bin/python || ( yum -y update && yum install -y python-minimal )
