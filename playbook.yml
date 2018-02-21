@@ -1,5 +1,4 @@
 ---
-
 - name: Pre-reqs for ansible to run
   hosts: all
   gather_facts: false
@@ -9,7 +8,7 @@
 
 - name: Build Data Ingest Linux Server.
   hosts: all
-  become: yes
+  become: true
   tasks:
   - name: SSM Group
     group:
@@ -27,6 +26,8 @@
       state: directory
       mode: 0775
       recurse: yes
+      owner: wherescape
+      group: SSM
     with_items:
       - ADT
       - EF
@@ -79,18 +80,24 @@
       src: /appdata/ADT
       dest: /ADT
       force: yes
+      owner: wherescape
+      group: SSM
       state: link
 
   - file:
       src: /appdata/EF
       dest: /EF
       force: yes
+      owner: wherescape
+      group: SSM
       state: link
 
   - file:
       src: /appdata/NATS
       dest: /NATS
       force: yes
+      owner: wherescape
+      group: SSM
       state: link
 
   - name: Yum Install Pre Dependencies
@@ -111,6 +118,7 @@
       - git
       - cloud-utils
       - nodejs
+    become: true
 
   - name: Pip Install Dependencies
     pip: 'name={{ item }}'
@@ -118,28 +126,32 @@
       - virtualenv
       - AWSCLI
       - ftputil
+    become: true
 
   - name: Install Python 2.7
     unarchive:
      src: https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz
      dest: /usr/src
      remote_src: yes
+    become: true
 
   - name: Configure Python 2.7
     shell: ./configure
     args:
       chdir: /usr/src/Python-2.7.10
     creates: /usr/src/Python-2.7.10/Modules
+    become: true
 
   - name: GET config files from DQ-config-bucket
     shell: '{{ item }}'
     with_items:
       - aws configure set aws_access_key_id '{{user_access_key}}'
       - aws configure set aws_secret_access_key '{{secret_access_key}}'
-      - aws s3 cp s3://dq-config-bucket/dq-data-ingest-linux-server/ /tmp/install/ --recursive
+      - aws s3 cp s3://dq-config-bucket/dq-data-ingest-linux-server /tmp/install --recursive
 
   - name: Remove AWS config
     shell: rm ~/.aws/credentials
+    become: true
 
   - name: Install Postgresql 9.6
     shell: '{{ item }}'
@@ -171,53 +183,51 @@
       - /etc/clamd.d/scan.conf.backup
       - /etc/clamd.conf
 
-#      - sed -i -e "s/^Example/#Example/" /etc/clamd.d/scan.conf
-#      - cp /usr/share/clamav/template/existing clamd.conf /etc/clamd.d/clamd.conf
-#      - chmod -u wherescape 755 /var/lib/clamav/
-#      - name: Add Wherescape to virusgroup
-#      - usermod -g virusgroup wherescape
-#      - name: Add Wherescape to /var/run/
-
-  - name: Freshclam Configuration Files
-    copy:
-      src: '{{ item.source }}'
-      dest: '{{ item.dest }}'
-    with_items:
-      - { source: /etc/freshclam.conf, dest: /etc/freshclam.conf.backup }
-      - { source: /tmp/install/freshclam.service, dest: /usr/lib/systemd/system/freshclam.service }
-
   - name: Freshclam Additional Configuration
     shell: '{{ item }}'
     with_items:
       - sed -i -e "s/^Example/#Example/" /etc/freshclam.conf
       - freshclam
 
+  - name: Freshclam Configuration Files
+    shell: cp /etc/freshclam.conf /etc/freshclam.conf.backup && \
+           cp /tmp/install/freshclam.service /usr/lib/systemd/system/freshclam.service
+
   - name: Cron Freshclam
     cron:
-      user: wherescape
       minute: "0"
       hour: "01,13"
       day: "*"
       job: "/usr/bin/freshclam --quiet"
 
-  - name: Start, Enable Freshclam
-    shell: '{{ item }}'
-    with_items:
-      - systemctl start freshclam
-      - systemctl enable freshclam
+   - name: Start, Enable Freshclam
+     shell: '{{ item }}'
+     with_items:
+       - systemctl start freshclam
+       - systemctl enable freshclam
 
-  - name: Start, Enable Clamd
-    shell: '{{ item }}'
-    with_items:
-      - systemctl start clamd@scan
-      - systemctl enable clamd@scan
+   - name: Start, Enable Clamd
+     shell: '{{ item }}'
+     with_items:
+       - systemctl start clamd@scan
+       - systemctl enable clamd@scan
 
   - name: Clone Data Transfer from Github
     git:
       repo: https://github.com/UKHomeOffice/data-transfer
       dest: '/appdata/data-transfer'
       force: yes
-    tags: clone_release
+    become: true
+    become_user: wherescape
+
+ # Copy's the config file over and change permissions, before the venv is created.
+  - name: Data Transfer Configuration
+    command: cp /tmp/install/ecosystem.config.js /appdata/data-transfer
+
+  - file:
+      path: '/appdata/data-transfer/ecosystem.config.js'
+      owner: wherescape
+      group: SSM
 
   - name: Npm Install Data Transfer Dependencies
     npm:
@@ -225,9 +235,12 @@
       global: yes
 
   - name: Configure Data Transfer
-    shell: python2.7 -m virtualenv ~/.virtualenvs/data-transfer && \
+    shell: cd /appdata/data-transfer && \
+           python2.7 -m virtualenv ~/.virtualenvs/data-transfer && \
            source ~/.virtualenvs/data-transfer/bin/activate && \
            pip install -r /appdata/data-transfer/requirements.txt
+    become: true
+    become_user: wherescape
 
   - name: Check PM2 Startup Script is present
     command: pm2 startup -u wherescape --hp /home/wherescape
@@ -235,15 +248,15 @@
       creates: /etc/init.d/pm2-wherescape
     tags: pm2_startup_script
 
-  - name: Data Transfer Configuration
-    copy:
-      src: '/tmp/install/ecosystem.config.js'
-      dest: '/appdata/data-transfer/ecosystem.config.js'
-
   - name: Start Data Transfer
-    shell: source ~/.virtualenvs/data-transfer/bin/activate && \
-           pm2 start -u wherescape ecosystem.config.js
+    shell: cd /appdata/data-transfer && \
+           source ~/.virtualenvs/data-transfer/bin/activate && \
+           export PYTHONPATH=. && \
+           pm2 start ecosystem.config.js
+    become: true
+    become_user: wherescape
 
+ # Other script setup
   - name: Clone script repos from Github
     git:
       repo: '{{ item.repo }}'
@@ -253,6 +266,7 @@
     with_items:
       - { repo: 'https://github.com/UKHomeOffice/dq_sftp-nats-dmz/', dest: '/opt/dq_sftp-nats-dmz' }
       - { repo: 'https://github.com/UKHomeOffice/dq-ssm_ingest/', dest: '/opt/dq-ssm_ingest' }
+    become: true
 
   - name: Symlink script files in opt
     file:
@@ -282,4 +296,3 @@
       path: /etc/sysconfig/network
       block: |
         RES_OPTIONS="rotate timeout:1 attempts:1"
-        
