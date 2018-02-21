@@ -1,0 +1,85 @@
+ ---
+ - name: Create Directory Structure
+   hosts: all
+   gather_facts: false
+   become: true
+   tasks:
+   - name: Create ADT, EF, NATS directory structure
+     file:
+       path: /{{ item }}
+       state: directory
+       mode: 0775
+       recurse: yes
+       owner: wherescape
+       group: SSM
+     with_items:
+       - ADT
+       - EF
+       - NATS
+       - appdata
+       - appdata/ADT
+       - appdata/ADT/archive
+       - appdata/ADT/archive/07032016acl
+       - appdata/ADT/archive/07032016oag
+       - appdata/ADT/archive/acl
+       - appdata/ADT/archive/mvt
+       - appdata/ADT/archive/oag
+       - appdata/ADT/data
+       - appdata/ADT/data/07032016acl
+       - appdata/ADT/data/07032016oag
+       - appdata/ADT/data/acl
+       - appdata/ADT/data/mvt
+       - appdata/ADT/data/oag
+       - appdata/ADT/quarantine
+       - appdata/ADT/quarantine/acl
+       - appdata/ADT/quarantine/mvt
+       - appdata/ADT/quarantine/oag
+       - appdata/ADT/scripts
+       - appdata/ADT/stage
+       - appdata/ADT/stage/acl
+       - appdata/ADT/stage/maytech
+       - appdata/ADT/stage/mvt
+       - appdata/ADT/stage/oag
+       - appdata/EF
+       - appdata/EF/data
+       - appdata/EF/data/drt
+       - appdata/EF/keys
+       - appdata/EF/log
+       - appdata/EF/scripts
+       - appdata/NATS
+       - appdata/NATS/archive
+       - appdata/NATS/archive/nats
+       - appdata/NATS/data
+       - appdata/NATS/data/nats
+       - appdata/NATS/data/ga
+       - appdata/NATS/log
+       - appdata/NATS/quarantine
+       - appdata/NATS/quarantine/nats
+       - appdata/NATS/scripts
+       - appdata/NATS/stage
+       - appdata/NATS/stage/maytech
+       - appdata/NATS/stage/nats
+
+   - file:
+       src: /appdata/ADT
+       dest: /ADT
+       force: yes
+       owner: wherescape
+       group: SSM
+       state: link
+
+   - file:
+       src: /appdata/EF
+       dest: /EF
+       force: yes
+       owner: wherescape
+       group: SSM
+       state: link
+
+   - file:
+       src: /appdata/NATS
+       dest: /NATS
+       force: yes
+       owner: wherescape
+       group: SSM
+       state: link

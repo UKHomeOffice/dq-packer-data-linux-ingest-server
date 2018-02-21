@@ -1,0 +1,57 @@
+---
+- name: Install ClamAV
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Install ClamAV Packages
+    shell: '{{ item }}'
+    with_items:
+      - yum -y install clamav-server clamav-data clamav-update clamav-filesystem clamav clamav-scanner-systemd clamav-devel clamav-lib clamav-server-systemd
+
+  - name: Configure SELinux for ClamAV
+    shell: '{{ item }}'
+    with_items:
+      - setenforce 0
+      - setsebool -P antivirus_can_scan_system 1
+      - setsebool -P clamd_use_jit 0
+
+  - name: Copy ClamAV config files
+    copy:
+      src: '/tmp/install/scan.conf'
+      dest: '{{ item }}'
+      remote_src: yes
+      force: yes
+    with_items:
+      - /etc/clamd.d/scan.conf
+      - /etc/clamd.d/scan.conf.backup
+      - /etc/clamd.conf
+
+  - name: Configure Freshclam.conf
+    shell: '{{ item }}'
+    with_items:
+      - sed -i -e "s/^Example/#Example/" /etc/freshclam.conf
+      - freshclam
+
+  - name: Freshclam Configuration Files
+    shell: cp /etc/freshclam.conf /etc/freshclam.conf.backup && \
+           cp /tmp/install/freshclam.service /usr/lib/systemd/system/freshclam.service
+
+  - name: Create Freshclam Cron
+    cron:
+      minute: "0"
+      hour: "01,13"
+      day: "*"
+      job: "/usr/bin/freshclam --quiet"
+
+  - name: Start, Enable Freshclam
+    shell: '{{ item }}'
+    with_items:
+      - systemctl start freshclam
+      - systemctl enable freshclam
+
+  - name: Start, Enable Clamd
+    shell: '{{ item }}'
+    with_items:
+      - systemctl start clamd@scan
+      - systemctl enable clamd@scan

@@ -1,0 +1,23 @@
+---
+- name: Pre-reqs for ansible to run
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - raw: test -e /usr/bin/python || ( yum -y update && yum install -y python-minimal )
+
+- name: Build Data Ingest Linux Server.
+  hosts: all
+  become: true
+  tasks:
+    - include_tasks: playbook-01-user-groups.yml
+    - include_tasks: playbook-02-directory-structure.yml
+    - include_tasks: playbook-03-yum-install.yml
+    - include_tasks: playbook-04-pip-install.yml
+    - include_tasks: playbook-05-install-python.yml
+    - include_tasks: playbook-06-get-config-files-from-s3.yml
+    - include_tasks: playbook-07-install-postgres.yml
+    - include_tasks: playbook-08-install-clamAV.yml
+    - include_tasks: playbook-09-install-data-transfer.yml
+    - include_tasks: playbook-10-install-nats-scripts.yml
+    - include_tasks: playbook-11-set-dns-resolver-options.yml

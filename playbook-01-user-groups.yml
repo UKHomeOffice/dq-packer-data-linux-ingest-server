@@ -1,0 +1,15 @@
+---
+- name: Create User Groups
+  hosts: all
+  gather facts: false
+  become: true
+  tasks:
+  - name: Create SSM Group
+    group:
+      name: SSM
+      system: yes
+
+  - name: Create wherescape user
+    user:
+      name: wherescape
+      group: SSM

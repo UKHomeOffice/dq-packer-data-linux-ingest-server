@@ -1,0 +1,15 @@
+---
+- name: Get config files from S3
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Get config files from DQ-config-bucket
+    shell: '{{ item }}'
+    with_items:
+      - aws configure set aws_access_key_id '{{user_access_key}}'
+      - aws configure set aws_secret_access_key '{{secret_access_key}}'
+      - aws s3 cp s3://dq-config-bucket/dq-data-ingest-linux-server /tmp/install --recursive
+
+  - name: Remove AWS config
+    shell: rm ~/.aws/credentials

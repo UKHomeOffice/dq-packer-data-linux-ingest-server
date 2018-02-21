@@ -1,0 +1,57 @@
+---
+- name: Install Data Transfer
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Clone Data Transfer from Github
+    git:
+      repo: https://github.com/UKHomeOffice/data-transfer
+      dest: '/appdata/data-transfer'
+      force: yes
+    become: true
+    become_user: wherescape
+
+ # Copy's the config file over and change permissions, before the venv is created.
+  - name: Copy Data Transfer Ecosystem file
+    command: cp /tmp/install/ecosystem.config.js /appdata/data-transfer
+
+  - file:
+      path: '/appdata/data-transfer/ecosystem.config.js'
+      owner: wherescape
+      group: SSM
+
+  - name: Install Data Transfer Dependencies
+    npm:
+      name: pm2
+      global: yes
+
+  - name: Install Data Transfer
+    shell: cd /appdata/data-transfer && \
+           python2.7 -m virtualenv ~/.virtualenvs/data-transfer && \
+           source ~/.virtualenvs/data-transfer/bin/activate && \
+           pip install -r /appdata/data-transfer/requirements.txt
+    become: true
+    become_user: wherescape
+
+  - name: Check PM2 Startup Script is present
+    command: pm2 startup -u wherescape --hp /home/wherescape
+    args:
+      creates: /etc/init.d/pm2-wherescape
+    tags: pm2_startup_script
+
+  - name: Start Data Transfer
+    shell: cd /appdata/data-transfer && \
+           source ~/.virtualenvs/data-transfer/bin/activate && \
+           export PYTHONPATH=. && \
+           pm2 start ecosystem.config.js
+    become: true
+    become_user: wherescape
+
+  - name: Create Data Transfer Cron
+    cron:
+      user: wherescape
+      minute: "1"
+      hour: "*"
+      day: "*"
+      job: "pm2 start /usr/lib/python2.7/site-packages/datatransfer/ecosystem.config.js --only data-transfer"

@@ -1,0 +1,11 @@
+---
+- name: DNS Resolver Options
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Set DNS Resolver Options
+    blockinfile:
+      path: /etc/sysconfig/network
+      block: |
+        RES_OPTIONS="rotate timeout:1 attempts:1"
