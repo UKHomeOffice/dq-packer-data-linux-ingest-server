@@ -1,7 +1,7 @@
 {
   "variables": {
-    "aws_access_key_id": "{{env `AWS_ACCESS_KEY_ID`}}",
-    "aws_secret_access_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
+    "access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
   },
   "builders": [
     {
@@ -55,8 +55,7 @@
       "sftp_command": "/usr/libexec/openssh/sftp-server",
       "playbook_file": "./playbook.yml",
       "extra_arguments": [
-        "--connection", "packer",
-        "--extra-vars", "ansible_shell_type=sh ansible_shell_executable=None aws_access_key_id={{user `aws_access_key_id`}} aws_secret_access_key={{user `aws_secret_access_key`}}"
+        "--extra-vars", "ansible_shell_type=sh ansible_shell_executable=None user_access_key={{user `access_key`}} secret_access_key={{user `secret_key`}}"
       ]
     }
   ]
