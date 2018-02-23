@@ -36,8 +36,8 @@ module.exports = {
         WRITE_AWS_S3_BUCKET_NAME : "dq-apps-prod-gait-s3",
         WRITE_AWS_ACCESS_KEY_ID : process.env.GA_BUCKET_ACCESS_KEY_ID,
         WRITE_AWS_SECRET_ACCESS_KEY : process.env.GA_BUCKET_SECRET_ACCESS_KEY,
-        WRITE_AWS_S3_HOST : process.env.GA_BUCKET_S3_HOST,
-        WRITE_AWS_S3_REGION : process.env.GA_BUCKET_S3_REGION
+        WRITE_AWS_S3_HOST : "https://s3.eu-west-2.amazonaws.com",
+        WRITE_AWS_S3_REGION : "eu-west-2"
       }
     },
   ]
