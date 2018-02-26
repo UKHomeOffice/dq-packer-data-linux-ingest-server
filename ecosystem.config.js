@@ -1,7 +1,7 @@
 module.exports = {
   apps : [
     {
-      name      : "data-transfer-s3-archive",
+      name      : "nats-to-s3-archive",
       script    : "/appdata/data-transfer/bin/data-transfer",
       interpreter: "python",
       env: {
@@ -9,7 +9,7 @@ module.exports = {
         INGEST_SOURCE_PATH : "/NATS/data/nats",
         WRITE_STORAGE_TYPE : "datatransfer.storage.S3Storage",
         READ_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
-        LOG_FILE_NAME : "data-transfer-s3-archive.log",
+        LOG_FILE_NAME : "nats-to-s3-archive.log",
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "True",
@@ -19,7 +19,7 @@ module.exports = {
       }
     },
     {
-      name      : "data-transfer-s3-ga",
+      name      : "nats-to-s3-ga",
       script    : "/appdata/data-transfer/bin/data-transfer",
       interpreter: "python",
       env: {
@@ -27,7 +27,7 @@ module.exports = {
         INGEST_SOURCE_PATH : "/NATS/data/nats",
         WRITE_STORAGE_TYPE : "datatransfer.storage.S3Storage",
         READ_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
-        LOG_FILE_NAME : "data-transfer-s3-ga.log",
+        LOG_FILE_NAME : "nats-to-s3-ga.log",
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "False",
