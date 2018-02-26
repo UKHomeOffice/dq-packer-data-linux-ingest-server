@@ -2,7 +2,7 @@ module.exports = {
   apps : [
     {
       name      : "data-transfer-s3-archive",
-      script    : "/usr/bin/data-transfer",
+      script    : "/appdata/data-transfer/bin/data-transfer",
       interpreter: "python",
       env: {
         INGEST_DEST_PATH : "nats",
@@ -20,7 +20,7 @@ module.exports = {
     },
     {
       name      : "data-transfer-s3-ga",
-      script    : "/usr/bin/data-transfer",
+      script    : "/appdata/data-transfer/bin/data-transfer",
       interpreter: "python",
       env: {
         INGEST_DEST_PATH : "nats",
