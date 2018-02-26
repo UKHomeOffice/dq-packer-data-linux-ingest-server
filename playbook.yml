@@ -212,6 +212,12 @@
       - systemctl start clamd@scan
       - systemctl enable clamd@scan
 
+  - name: Add Wherescape user to clamscan group now it exists
+    user:
+      name: wherescape
+      groups: clamscan
+      append: yes
+
   - name: Clone Data Transfer from Github
     git:
       repo: https://github.com/UKHomeOffice/data-transfer
