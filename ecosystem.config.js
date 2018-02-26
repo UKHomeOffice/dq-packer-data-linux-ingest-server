@@ -58,5 +58,23 @@ module.exports = {
         WRITE_AWS_S3_BUCKET_NAME : process.env.DATA_ARCHIVE_BUCKET_NAME
       }
     },
+    {
+      name      : "acl-to-s3-archive",
+      script    : "/appdata/data-transfer/bin/data-transfer",
+      interpreter: "python",
+      env: {
+        INGEST_DEST_PATH : "nats",
+        INGEST_SOURCE_PATH : "/ADT/data/acl",
+        WRITE_STORAGE_TYPE : "datatransfer.storage.S3Storage",
+        READ_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
+        LOG_FILE_NAME : "oag-to-s3-archive.log",
+        PROCESS_INTERVAL : 4,
+        MAX_FILES_BATCH : 25,
+        FOLDER_DATE_OUTPUT : "True",
+        LOG_LEVEL : "INFO",
+        USE_IAM_CREDS : "True",
+        WRITE_AWS_S3_BUCKET_NAME : process.env.DATA_ARCHIVE_BUCKET_NAME
+      }
+    },
   ]
 }
