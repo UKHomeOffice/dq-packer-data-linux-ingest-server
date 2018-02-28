@@ -2,7 +2,7 @@
 - name: Post Deploy SSM Processing Not Prod Features
   hosts: all
   gather_facts: false
-  become: yes
+  become: true
   tasks:
   - name: Change value of environment variable Maytech OAG Landing Dir
-    shell: export MAYTECH_OAG_LANDING_DIR="oag-land"
+    shell: echo "export MAYTECH_OAG_LANDING_DIR=oag-land" >> /home/wherescape/.bash_profile
