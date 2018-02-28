@@ -100,6 +100,23 @@
       group: SSM
       state: link
 
+  - name: Create .ssh directory for Wherescape user
+    file:
+      path: /home/wherescape/.ssh
+      state: directory
+      mode: 700
+      owner: wherescape
+      group: SSM
+
+  - name: Create authorized_keys file for Wherescape user
+    copy:
+      content: ""
+      dest: /home/wherescape/.ssh/authorized_keys
+      force: no
+      mode: 600
+      owner: wherescape
+      group: SSM
+
   - name: Yum Install Pre Dependencies
     yum: name={{ item }}
     with_items:
