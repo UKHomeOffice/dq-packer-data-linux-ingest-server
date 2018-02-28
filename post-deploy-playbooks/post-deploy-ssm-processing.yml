@@ -1,0 +1,12 @@
+---
+- name: Post Deploy SSM Processing Features
+  hosts: all
+  gather_facts: false
+  become: yes
+  tasks:
+  - name: Reset permissions of /ADT/scripts to wherescape for log files
+    file:
+      path: /opt/dq-ssm_ingest/ADT/WEB_Server/
+      owner: wherescape
+      group: SSM
+      mode: 0775
