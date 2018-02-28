@@ -45,7 +45,7 @@ module.exports = {
       script    : "/appdata/data-transfer/bin/data-transfer",
       interpreter: "python",
       env: {
-        INGEST_DEST_PATH : "nats",
+        INGEST_DEST_PATH : "oag",
         INGEST_SOURCE_PATH : "/ADT/data/oag",
         WRITE_STORAGE_TYPE : "datatransfer.storage.S3Storage",
         READ_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
@@ -63,7 +63,7 @@ module.exports = {
       script    : "/appdata/data-transfer/bin/data-transfer",
       interpreter: "python",
       env: {
-        INGEST_DEST_PATH : "nats",
+        INGEST_DEST_PATH : "acl",
         INGEST_SOURCE_PATH : "/ADT/data/acl",
         WRITE_STORAGE_TYPE : "datatransfer.storage.S3Storage",
         READ_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
