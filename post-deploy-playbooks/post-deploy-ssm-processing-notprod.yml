@@ -1,6 +1,5 @@
 ---
 - name: Post Deploy SSM Processing Not Prod Features
-- name: Post Deploy SSM Processing Not Prod Features
   hosts: all
   gather_facts: false
   become: yes
