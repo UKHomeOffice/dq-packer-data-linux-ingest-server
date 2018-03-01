@@ -10,3 +10,10 @@
       owner: wherescape
       group: SSM
       mode: 0775
+
+  - name: Yum Install Dependencies for SSM ADT EXT Server scripts
+    yum: name={{ item }}
+    with_items:
+      - python-psycopg2
+      - python-argparse
+      - libxml2-python
