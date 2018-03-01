@@ -13,7 +13,7 @@ module.exports = {
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "True",
-        LOG_LEVEL : "INFO",
+        LOG_LEVEL : "DEBUG",
         USE_IAM_CREDS : "True",
         WRITE_AWS_S3_BUCKET_NAME : process.env.DATA_ARCHIVE_BUCKET_NAME
       }
@@ -31,7 +31,7 @@ module.exports = {
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "False",
-        LOG_LEVEL : "INFO",
+        LOG_LEVEL : "DEBUG",
         USE_IAM_CREDS : "False",
         WRITE_AWS_S3_BUCKET_NAME : process.env.GA_BUCKET_NAME,
         WRITE_AWS_ACCESS_KEY_ID : process.env.GA_BUCKET_ACCESS_KEY_ID,
@@ -53,7 +53,7 @@ module.exports = {
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "True",
-        LOG_LEVEL : "INFO",
+        LOG_LEVEL : "DEBUG",
         USE_IAM_CREDS : "True",
         WRITE_AWS_S3_BUCKET_NAME : process.env.DATA_ARCHIVE_BUCKET_NAME
       }
@@ -71,7 +71,7 @@ module.exports = {
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "True",
-        LOG_LEVEL : "INFO",
+        LOG_LEVEL : "DEBUG",
         USE_IAM_CREDS : "True",
         WRITE_AWS_S3_BUCKET_NAME : process.env.DATA_ARCHIVE_BUCKET_NAME
       }
