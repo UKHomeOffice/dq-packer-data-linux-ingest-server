@@ -308,8 +308,19 @@
       state: link
     with_items:
       - { src: '/opt/dq_sftp-nats-dmz/NATS/scripts/', dest: '/appdata/NATS/scripts'}
-      - { src: '/opt/dq-ssm_ingest/ADT/WEB_Server/', dest: '/appdata/ADT/scripts'}
-      - { src: '/opt/dq-ssm_ingest/ADT/EXT_Server/', dest: '/appdata/ADT/scripts'}
+
+  - name: Copy SSM Ingest files to ADT
+    command: cp -R {{ item }}. /appdata/ADT/scripts
+    with_items:
+      - /opt/dq-ssm_ingest/ADT/EXT_Server/
+      - /opt/dq-ssm_ingest/ADT/WEB_Server/
+
+  - name: Set permissions of /appdata/ADT/scripts to wherescape for log files
+    file:
+      path: /appdata/ADT/scripts
+      owner: wherescape
+      group: SSM
+      mode: 0775
 
   - name: '{{ item.name }}'
     cron:
