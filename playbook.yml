@@ -321,6 +321,7 @@
       owner: wherescape
       group: SSM
       mode: 0775
+      recurse: yes
 
   - name: '{{ item.name }}'
     cron:
