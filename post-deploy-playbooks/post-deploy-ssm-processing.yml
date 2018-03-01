@@ -4,13 +4,6 @@
   gather_facts: false
   become: yes
   tasks:
-  - name: Reset permissions of /ADT/scripts to wherescape for log files
-    file:
-      path: /opt/dq-ssm_ingest/ADT/WEB_Server/
-      owner: wherescape
-      group: SSM
-      mode: 0775
-
   - name: Yum Install Dependencies for SSM ADT EXT Server scripts
     yum: name={{ item }}
     with_items:
