@@ -17,3 +17,14 @@
       - python-psycopg2
       - python-argparse
       - libxml2-python
+
+  - name: Add additional directories for Wherescape user
+    file:
+      path: /{{ item }}
+      state: directory
+      mode: 0775
+      recurse: yes
+      owner: wherescape
+      group: SSM
+    with_items:
+      - appdata/ADT/log
