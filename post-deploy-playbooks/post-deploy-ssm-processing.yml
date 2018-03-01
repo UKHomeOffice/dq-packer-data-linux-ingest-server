@@ -21,3 +21,8 @@
       group: SSM
     with_items:
       - appdata/ADT/log
+
+  - name: Set MVT_SCHEMA_SSM_PASSWORD for Wherescape user
+    shell: export MVT_SCHEMA_SSM_PASSWORD="`aws --region eu-west-2 ssm get-parameter --name mvt_schema_ssm_password --query 'Parameter.Value' --output text --with-decryption`"
+    become: true
+    become_user: wherescape
