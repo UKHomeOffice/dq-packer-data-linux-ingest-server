@@ -309,6 +309,7 @@
     with_items:
       - { src: '/opt/dq_sftp-nats-dmz/NATS/scripts/', dest: '/appdata/NATS/scripts'}
       - { src: '/opt/dq-ssm_ingest/ADT/WEB_Server/', dest: '/appdata/ADT/scripts'}
+      - { src: '/opt/dq-ssm_ingest/ADT/EXT_Server/', dest: '/appdata/ADT/scripts'}
 
   - name: '{{ item.name }}'
     cron:
