@@ -27,6 +27,11 @@
     become: true
     become_user: wherescape
 
+  - name: Set RDS_POSTGRES_DATA_INGEST_HOST_NAME for Wherescape user
+    shell: export RDS_POSTGRES_DATA_INGEST_HOST_NAME=`aws --region eu-west-2 ssm get-parameter --name rds-postgres-dataingest-hostname --query 'Parameter.Value' --output text --with-decryption`
+    become: true
+    become_user: wherescape
+
   - name: Yum Install pyodbc dependencies
     yum: name={{ item }}
     with_items:
