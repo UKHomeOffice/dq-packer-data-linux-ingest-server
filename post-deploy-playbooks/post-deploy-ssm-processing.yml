@@ -34,8 +34,3 @@
     pip: name={{ item }}
     with_items:
       - pyodbc
-
-  - name: Delete OAG history db cache
-    shell: rm /ADT/scripts/oaghistory.db
-    become: true
-    become_user: wherescape
