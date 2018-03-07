@@ -24,7 +24,7 @@ module.exports = {
       interpreter: "python",
       env: {
         INGEST_DEST_PATH : "nats",
-        INGEST_SOURCE_PATH : "/NATS/data/nats",
+        INGEST_SOURCE_PATH : "/NATS/data/ga",
         WRITE_STORAGE_TYPE : "datatransfer.storage.S3Storage",
         READ_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
         LOG_FILE_NAME : "nats-to-s3-ga.log",
