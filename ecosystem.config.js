@@ -33,6 +33,7 @@ module.exports = {
         FOLDER_DATE_OUTPUT : "False",
         LOG_LEVEL : "DEBUG",
         USE_IAM_CREDS : "False",
+        WRITE_AWS_S3_ENCRYPT: "True",
         WRITE_AWS_S3_BUCKET_NAME : process.env.GA_BUCKET_NAME,
         WRITE_AWS_ACCESS_KEY_ID : process.env.GA_BUCKET_ACCESS_KEY_ID,
         WRITE_AWS_SECRET_ACCESS_KEY : process.env.GA_BUCKET_SECRET_ACCESS_KEY,
