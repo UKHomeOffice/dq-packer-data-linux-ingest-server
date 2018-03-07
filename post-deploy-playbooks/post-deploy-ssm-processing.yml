@@ -21,6 +21,8 @@
       group: SSM
     with_items:
       - appdata/ADT/log
+      - /NATS/scripts
+      - /NATS/scripts/check_run.sh
 
   - name: Yum Install pyodbc dependencies
     yum: name={{ item }}
