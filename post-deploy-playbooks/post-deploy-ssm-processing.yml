@@ -22,8 +22,12 @@
       group: SSM
     with_items:
       - appdata/ADT/log
-      - /NATS/scripts
-      - /NATS/scripts/check_run.sh
+
+  - name: Update NATS permissions to wherescape
+    shell: "{{ item }}"
+    with_items:
+      - sudo setfacl -m u:wherescape:rwx /NATS/scripts
+      - sudo setfacl -m u:wherescape:rwx /NATS/scripts/check_run.sh
 
   - name: Yum Install pyodbc dependencies
     yum: name={{ item }}
@@ -93,13 +97,34 @@
 
   - name: Install cloudwatch log agent
     environment:
-      LC_ALL:
-      shell: /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
-      args:
+      LC_ALL: C
+    shell: /tmp/awslogs-agent-setup.py --region eu-west-2 --non-interactive -c /tmp/cwlogs.conf
+    args:
         creates: /var/awslogs/etc/aws.conf
 
-    - name: Make Cron Job to start awslogs with right region
-      cron:
-        name: Start awslogs
-        special_time: reboot
-        job: /usr/bin/startcloudwatchlogs.sh
+  - name: Make Cron Job to start awslogs with right region
+    cron:
+      name: Start awslogs
+      special_time: reboot
+      job: /usr/bin/startcloudwatchlogs.sh
+
+  - name: Delete PM2 process
+    shell: pm2 delete all
+    become_user: wherescape
+
+  - name: Start Data Transfer
+    shell: cd /appdata/data-transfer && \
+           source ~/.virtualenvs/data-transfer/bin/activate && \
+           export PYTHONPATH=. && \
+           pm2 start -u wherescape ecosystem.config.js
+    become: true
+    become_user: wherescape
+    args:
+      chdir: /appdata/data-transfer
+
+  - name: Saving PM2 state to enable restart
+    command: pm2 save
+    become: true
+    become_user: wherescape
+    args:
+      chdir: /appdata/data-transfer
