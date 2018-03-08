@@ -86,12 +86,8 @@
       mode: "+x"
 
   - name: Create Cloudwatch logs file
-    file:
-      path: /usr/bin/startcloudwatchlogs.sh
-      state: file
-      owner: root
-      group: root
-      mode: 0755
+    shell: touch /usr/bin/startcloudwatchlogs.sh && \
+           chmod 755 /usr/bin/startcloudwatchlogs.sh
 
   - name: Write Cloudwatch logs file
     copy:
