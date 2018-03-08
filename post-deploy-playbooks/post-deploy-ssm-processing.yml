@@ -136,6 +136,26 @@
         log_group_name = /Centos_Server/freshclam
         log_stream_name = {instance_id}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/datatransfer-acl-to-s3-archive]
+        file = /appdata/data-transfer/acl-to-s3-archive.log
+        log_group_name = /Centos_Server/datatransfer-acl-to-s3
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/datatransfer-nats-to-s3-archive]
+        file = /appdata/data-transfer/nats-to-s3-archive.log
+        log_group_name = /Centos_Server/datatransfer-nats-to-s3-archive
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/datatransfer-nats-to-s3-ga]
+        file = /appdata/data-transfer/nats-to-s3-ga.log
+        log_group_name = /Centos_Server/datatransfer-nats-to-s3-ga
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/datatransfer-oag-to-s3-archive]
+        file = /appdata/data-transfer/oag-to-s3-archive.log
+        log_group_name = /Centos_Server/datatransfer-oag-to-s3-archive
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
 
   - name: Install cloudwatch log agent
     environment:
