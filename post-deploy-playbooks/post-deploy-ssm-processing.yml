@@ -22,8 +22,12 @@
       group: SSM
     with_items:
       - appdata/ADT/log
-      - /NATS/scripts
-      - /NATS/scripts/check_run.sh
+
+  - name: Update NATS permissions to wherescape user
+    shell: "{{ item }}"
+    with_items:
+      - sudo setfacl -m u:wherescape:rwx /NATS/scripts
+      - sudo setfacl -m u:wherescape:rwx /NATS/scripts/check_run.sh
 
   - name: Yum Install pyodbc dependencies
     yum: name={{ item }}
