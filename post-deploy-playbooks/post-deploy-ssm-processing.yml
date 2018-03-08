@@ -58,12 +58,6 @@
         - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: sh -c ". /etc/profile.d/script_envs.sh && cd /ADT/scripts && python ftp_acl_web02.py" }
         - { name: Cron sftp_oag_client_maytech.py, user: wherescape, minute: "*/2",  hour: "*", day: "*",  job: sh -c  ". /etc/profile.d/script_envs.sh && cd /ADT/scripts && python sftp_oag_client_maytech.py > /dev/null 2> /dev/null" }
 
-  - name: Stop Data Transfer
-    shell: source ~/.virtualenvs/data-transfer/bin/activate && \
-           pm2 delete all
-    become: true
-    become_user: wherescape
-
   - name: Start Data Transfer
     shell: cd /appdata/data-transfer && \
            source ~/.virtualenvs/data-transfer/bin/activate && \
