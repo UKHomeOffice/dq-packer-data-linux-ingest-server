@@ -131,6 +131,11 @@
         log_group_name = /Centos_Server/yum
         log_stream_name = {instance_id}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/freshclam]
+        file = /var/log/freshclam.log
+        log_group_name = /Centos_Server/freshclam
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
 
   - name: Install cloudwatch log agent
     environment:
