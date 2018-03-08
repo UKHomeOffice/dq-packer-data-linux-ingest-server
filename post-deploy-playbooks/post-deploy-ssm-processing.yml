@@ -116,6 +116,21 @@
         log_group_name = /Centos_Server/cloud-init
         log_stream_name = {instance_id}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/cron]
+        file = /var/log/cron
+        log_group_name = /Centos_Server/cron
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/secure]
+        file = /var/log/secure
+        log_group_name = /Centos_Server/secure
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/yum]
+        file = /var/log/yum.log
+        log_group_name = /Centos_Server/yum
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
 
   - name: Install cloudwatch log agent
     environment:
