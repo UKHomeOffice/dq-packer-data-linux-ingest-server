@@ -47,7 +47,7 @@ module.exports = {
       interpreter: "python",
       env: {
         INGEST_DEST_PATH : "oag",
-        INGEST_SOURCE_PATH : "/ADT/data/oag",
+        INGEST_SOURCE_PATH : "/ADT/archive/oag",
         WRITE_STORAGE_TYPE : "datatransfer.storage.S3Storage",
         READ_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
         LOG_FILE_NAME : "oag-to-s3-archive.log",
@@ -65,7 +65,7 @@ module.exports = {
       interpreter: "python",
       env: {
         INGEST_DEST_PATH : "acl",
-        INGEST_SOURCE_PATH : "/ADT/data/acl",
+        INGEST_SOURCE_PATH : "/ADT/archive/acl",
         WRITE_STORAGE_TYPE : "datatransfer.storage.S3Storage",
         READ_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
         LOG_FILE_NAME : "acl-to-s3-archive.log",
