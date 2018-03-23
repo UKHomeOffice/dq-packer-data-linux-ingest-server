@@ -78,7 +78,7 @@ module.exports = {
       }
     },
     {
-      name      : "s3-landing-to-local",
+      name      : "s3-landing-oag-to-local",
       script    : "/appdata/data-transfer/bin/data-transfer",
       interpreter: "python",
       env: {
@@ -93,6 +93,24 @@ module.exports = {
         LOG_LEVEL : "DEBUG",
         USE_IAM_CREDS : "True",
         READ_AWS_S3_BUCKET_NAME : 
+      }
+    },
+    {
+      name      : "s3-landing-acl-to-local",
+      script    : "/appdata/data-transfer/bin/data-transfer",
+      interpreter: "python",
+      env: {
+        INGEST_DEST_PATH : "/home/wherescape/test_for_data_transfer_ingest_landing_acl",
+        INGEST_SOURCE_PATH : "acl/tmp/",
+        WRITE_STORAGE_TYPE : "datatransfer.storage.FolderStorage",
+        READ_STORAGE_TYPE : "datatransfer.storage.S3Storage",
+        LOG_FILE_NAME : "s3-landing-to-local.log",
+        PROCESS_INTERVAL : 2,
+        MAX_FILES_BATCH : 1,
+        FOLDER_DATE_OUTPUT : "False",
+        LOG_LEVEL : "DEBUG",
+        USE_IAM_CREDS : "True",
+        READ_AWS_S3_BUCKET_NAME :
       }
     },
   ]
