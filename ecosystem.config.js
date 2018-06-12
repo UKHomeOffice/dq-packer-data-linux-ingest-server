@@ -13,7 +13,7 @@ module.exports = {
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "True",
-        LOG_LEVEL : "DEBUG",
+        LOG_LEVEL : "INFO",
         USE_IAM_CREDS : "True",
         WRITE_AWS_S3_BUCKET_NAME : process.argv[7]
       }
@@ -31,7 +31,7 @@ module.exports = {
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "False",
-        LOG_LEVEL : "DEBUG",
+        LOG_LEVEL : "INFO",
         USE_IAM_CREDS : "False",
         WRITE_AWS_S3_ENCRYPT: "aws:kms",
         WRITE_AWS_S3_BUCKET_NAME : process.argv[8],
@@ -54,7 +54,7 @@ module.exports = {
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "True",
-        LOG_LEVEL : "DEBUG",
+        LOG_LEVEL : "INFO",
         USE_IAM_CREDS : "True",
         WRITE_AWS_S3_BUCKET_NAME : process.argv[7]
       }
@@ -72,7 +72,7 @@ module.exports = {
         PROCESS_INTERVAL : 4,
         MAX_FILES_BATCH : 25,
         FOLDER_DATE_OUTPUT : "True",
-        LOG_LEVEL : "DEBUG",
+        LOG_LEVEL : "INFO",
         USE_IAM_CREDS : "True",
         WRITE_AWS_S3_BUCKET_NAME : process.argv[7]
       }
@@ -90,7 +90,7 @@ module.exports = {
         PROCESS_INTERVAL : 300,
         MAX_FILES_BATCH : 200,
         FOLDER_DATE_OUTPUT : "False",
-        LOG_LEVEL : "DEBUG",
+        LOG_LEVEL : "INFO",
         USE_IAM_CREDS : "True",
         READ_AWS_S3_BUCKET_NAME : 
       }
@@ -108,7 +108,7 @@ module.exports = {
         PROCESS_INTERVAL : 60,
         MAX_FILES_BATCH : 1,
         FOLDER_DATE_OUTPUT : "False",
-        LOG_LEVEL : "DEBUG",
+        LOG_LEVEL : "INFO",
         USE_IAM_CREDS : "True",
         READ_AWS_S3_BUCKET_NAME :
       }
