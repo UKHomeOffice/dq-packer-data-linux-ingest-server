@@ -313,8 +313,7 @@
   - name: Copy SSM Ingest files to ADT
     command: cp -R {{ item }}. /appdata/ADT/scripts
     with_items:
-      - /opt/dq-ssm_ingest/ADT/EXT_Server/
-      - /opt/dq-ssm_ingest/ADT/WEB_Server/
+      - /opt/dq-ssm_ingest/ADT/
 
   - name: Set permissions of /appdata/ADT/scripts to wherescape for log files
     file:
