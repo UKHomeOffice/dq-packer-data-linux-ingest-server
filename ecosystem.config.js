@@ -92,7 +92,7 @@ module.exports = {
         FOLDER_DATE_OUTPUT : "False",
         LOG_LEVEL : "INFO",
         USE_IAM_CREDS : "True",
-        READ_AWS_S3_BUCKET_NAME : 
+        READ_AWS_S3_BUCKET_NAME : process.argv[11]
       }
     },
     {
@@ -110,7 +110,7 @@ module.exports = {
         FOLDER_DATE_OUTPUT : "False",
         LOG_LEVEL : "INFO",
         USE_IAM_CREDS : "True",
-        READ_AWS_S3_BUCKET_NAME :
+        READ_AWS_S3_BUCKET_NAME : process.argv[11]
       }
     },
   ]
