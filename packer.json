@@ -1,6 +1,7 @@
 {
   "variables": {
     "access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "drone_build_number": "{{env `DRONE_BUILD_NUMBER`}}",
     "secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
   },
   "builders": [
@@ -36,7 +37,7 @@
       ],
       "ssh_username": "centos",
       "instance_type": "t2.medium",
-      "ami_name": "dq-data-ingest-linux-server {{isotime | clean_ami_name}}",
+      "ami_name": "dq-data-ingest-linux-server-{{user `drone_build_number`}}",
       "ami_users": [
         "483846886818",
         "337779336338"
