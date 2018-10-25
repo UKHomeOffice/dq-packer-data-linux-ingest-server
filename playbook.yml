@@ -165,10 +165,6 @@
     with_items:
       - aws s3 cp s3://dq-config-bucket/dq-data-ingest-linux-server /tmp/install --recursive
 
-  - name: Remove AWS config
-    shell: rm ~/.aws/credentials
-    become: true
-
   - name: Install Postgresql 9.6
     shell: '{{ item }}'
     with_items:
