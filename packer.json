@@ -10,7 +10,7 @@
       "access_key": "{{user `access_key`}}",
       "secret_key": "{{user `secret_key`}}",
       "region": "eu-west-2",
-      "iam_instance_profile": "packer-builder",
+      "iam_instance_profile": "packer_builder",
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "hvm",
