@@ -127,6 +127,7 @@
       - openssl-devel
       - zlib-devel
       - wget
+      - unzip
     become: true
 
   - name: Yum Install Dependencies
@@ -229,6 +230,25 @@
       hour: "01,13"
       day: "*"
       job: "/usr/bin/freshclam --quiet"
+
+  - name: Cron OAG/ACL restore backup on reboot / boot
+    cron:
+      special_time: reboot
+      job: "/scripts/acl_oag_download.sh"
+
+  - name: Cron OAG Backups
+    cron:
+      minute: "*/5"
+      hour: "*"
+      day : "*"
+      job: "/scripts/oag_backup.sh"
+
+  - name: Cron ACL Backups
+    cron:
+      minute: "*/5"
+      hour: "*"
+      day : "*"
+      job: "/scripts/acl_backup.sh"
 
   - name: Start, Enable Freshclam
     shell: '{{ item }}'
