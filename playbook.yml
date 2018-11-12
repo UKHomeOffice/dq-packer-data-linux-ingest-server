@@ -323,8 +323,9 @@
   - name: Update NATS permissions to wherescape user
     shell: "{{ item }}"
     with_items:
-      - sudo setfacl -m u:wherescape:rwx /NATS/scripts
-      - sudo setfacl -m u:wherescape:rwx /NATS/scripts/check_run.sh
+      - setfacl -m u:wherescape:rwx /NATS/scripts
+      - setfacl -m u:wherescape:rwx /NATS/scripts/check_run.sh
+    become: true
 
   - name: Copy SSM Ingest files to ADT
     command: cp -R {{ item }}. /appdata/ADT/scripts
@@ -363,11 +364,11 @@
                 regexp="^PermitRootLogin"
                 line="PermitRootLogin no"
                 state=present
-    lineinfile: dest=/etc/ssh/sshd_config
+  - lineinfile: dest=/etc/ssh/sshd_config
                 regexp="^PasswordAuthentication"
                 line="PasswordAuthentication no"
                 state=present
-    lineinfile: dest=/etc/ssh/sshd_config
+  - lineinfile: dest=/etc/ssh/sshd_config
                 regexp="^X11Forwarding"
                 line="X11Forwarding no"
                 state=present
@@ -379,8 +380,10 @@
       mode: "+x"
 
   - name: Create Cloudwatch logs file
-    shell: touch /usr/bin/startcloudwatchlogs.sh && \
-           chmod 755 /usr/bin/startcloudwatchlogs.sh
+    file:
+      path: /usr/bin/startcloudwatchlogs.sh
+      state: touch
+      mode: 0755
 
   - name: Write Cloudwatch logs file
     copy:
