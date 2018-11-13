@@ -44,8 +44,8 @@
         "337779336338"
       ]
     }
-  ],
-  "provisioners": [
+  ]
+  /* "provisioners": [
     {
       "type": "ansible",
       "sftp_command": "/usr/libexec/openssh/sftp-server",
@@ -54,5 +54,5 @@
         "--extra-vars", "ansible_shell_type=sh"
       ]
     }
-  ]
+  ] */
 }
