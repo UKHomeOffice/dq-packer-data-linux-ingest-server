@@ -1,13 +1,13 @@
 pipeline:
 
   linux-packer-validate:
-    image: quay.io/ukhomeofficedigital/dq-packer-ansible
+    image: hashicorp/packer:light
     commands:
       - export HOME=/home/packer
       - packer validate packer.json
 
   linux-packer-inspect:
-    image: quay.io/ukhomeofficedigital/dq-packer-ansible
+    image: hashicorp/packer:light
     commands:
       - export HOME=/home/packer
       - packer inspect packer.json
