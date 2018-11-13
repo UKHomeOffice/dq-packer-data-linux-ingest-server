@@ -1,7 +1,7 @@
 pipeline:
 
   linux-packer-validate:
-    image: quay.io/ukhomeofficedigital/dq-packer-ansible
+    image: chrisns/packer-ansible
     commands:
       - export HOME=/home/packer
       - PACKER_LOG=1 packer validate packer.json
