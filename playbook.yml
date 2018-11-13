@@ -231,25 +231,6 @@
       day: "*"
       job: "/usr/bin/freshclam --quiet"
 
-  - name: Cron OAG/ACL restore backup on reboot / boot
-    cron:
-      special_time: reboot
-      job: "/scripts/acl_oag_download.sh"
-
-  - name: Cron OAG Backups
-    cron:
-      minute: "*/5"
-      hour: "*"
-      day : "*"
-      job: "/scripts/oag_backup.sh"
-
-  - name: Cron ACL Backups
-    cron:
-      minute: "*/5"
-      hour: "*"
-      day : "*"
-      job: "/scripts/acl_backup.sh"
-
   - name: Start, Enable Freshclam
     shell: '{{ item }}'
     with_items:
@@ -352,6 +333,19 @@
     with_items:
       - /opt/dq-ssm_ingest/ADT/
 
+  - name: Copy scripts to /ADT/scripts
+    file:
+      src: '{{ item.src }}'
+      dest: /ADT/scripts
+      owner: wherescape
+      group: SSM
+      mode: 0775
+      recurse: yes
+      with_items:
+        - { src: acl_backup.sh }
+        - { src: acl_oag_download.sh }
+        - { src: oag_backup.sh }
+
   - name: Set permissions of /appdata/ADT/scripts to wherescape for log files
     file:
       path: /appdata/ADT/scripts
@@ -367,11 +361,15 @@
       hour: '{{ item.hour }}'
       day: '{{ item.day }}'
       job: '{{ item.job }}'
+      special_time: '{{ item.special }}'
     with_items:
         - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: sh -c ". /etc/profile.d/script_envs.sh && cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
         - { name: Cron nats_house_keeping, user: wherescape, minute: "*/45",  hour: "*", day: "*", job: sh -c ". /etc/profile.d/script_envs.sh && /NATS/scripts/nats_house_keeping.sh > /dev/null 2> /dev/null" }
         - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: sh -c ". /etc/profile.d/script_envs.sh && cd /ADT/scripts && python ftp_acl_web02.py" }
         - { name: Cron sftp_oag_client_maytech.py, user: wherescape, minute: "*/2",  hour: "*", day: "*",  job: sh -c  ". /etc/profile.d/script_envs.sh && cd /ADT/scripts && python sftp_oag_client_maytech.py > /dev/null 2> }
+        - { name: Cron OAG/ACL restore backup on reboot / boot, user: wherescape, job: /ADT/scripts/acl_oag_download.sh > /dev/null 2>, special: reboot}
+        - { name: Cron OAG Backups, user: wherescape, minute: "*/5", hour: "*", day: "*", job: /ADT/scripts/oag_backup.sh > /dev/null 2> }
+        - { name: Cron ACL Backups, user: wherescape, minute: "*/5", hour: "*", day: "*", job: /ADT/scripts/acl_backup.sh > /dev/null 2> }
 
   - name: Set DNS Resolver Options
     blockinfile:
@@ -485,8 +483,3 @@
       name: Start awslogs
       special_time: reboot
       job: /usr/bin/startcloudwatchlogs.sh
-
-  - name: Ensure scripts directory exists
-    file:
-      path: /scripts
-      state: directory

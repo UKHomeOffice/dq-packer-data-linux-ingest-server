@@ -53,11 +53,6 @@
       "extra_arguments": [
         "--extra-vars", "ansible_shell_type=sh"
       ]
-    },
-    {
-      "type": "file",
-      "source": "./scripts",
-      "destination": "/"
     }
   ]
 }
