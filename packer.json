@@ -44,5 +44,15 @@
         "337779336338"
       ]
     }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "sftp_command": "/usr/libexec/openssh/sftp-server",
+      "playbook_file": "./playbook.yml",
+      "extra_arguments": [
+        "--extra-vars", "ansible_shell_type=sh"
+      ]
+    }
   ]
 }
