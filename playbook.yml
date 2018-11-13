@@ -485,3 +485,8 @@
       name: Start awslogs
       special_time: reboot
       job: /usr/bin/startcloudwatchlogs.sh
+
+  - name: Ensure scripts directory exists
+    file:
+      path: /scripts
+      state: directory
