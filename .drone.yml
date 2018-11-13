@@ -2,6 +2,7 @@ pipeline:
 
   linux-packer-validate:
     image: quay.io/ukhomeofficedigital/dq-packer-ansible
+    pull: true
     commands:
       - export HOME=/home/packer
       - packer validate packer.json
