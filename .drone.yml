@@ -4,7 +4,7 @@ pipeline:
     image: quay.io/ukhomeofficedigital/dq-packer-ansible
     commands:
       - export HOME=/home/packer
-      - PACKER_LOG=1 packer validate packer.json
+      - packer validate packer.json
 
   linux-packer-inspect:
     image: quay.io/ukhomeofficedigital/dq-packer-ansible
