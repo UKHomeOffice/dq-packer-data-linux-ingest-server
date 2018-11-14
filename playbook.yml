@@ -334,13 +334,12 @@
       - /opt/dq-ssm_ingest/ADT/
 
   - name: Copy scripts to /ADT/scripts
-    file:
-      src: '{{ item.src }}'
+    copy:
+      src: ./scripts/'{{ item.src }}'
       dest: /ADT/scripts
       owner: wherescape
       group: SSM
       mode: 0775
-      recurse: yes
     with_items:
       - { src: acl_backup.sh }
       - { src: acl_oag_download.sh }
@@ -394,22 +393,11 @@
       dest: /tmp/awslogs-agent-setup.py
       mode: "+x"
 
-  - name: Create Cloudwatch logs file
-    file:
-      path: /usr/bin/startcloudwatchlogs.sh
-      state: touch
-      mode: 0755
-
-  - name: Write Cloudwatch logs file
+  - name: Copy Cloudwatch logs file
     copy:
+      src: ./scripts/startcloudwatchlogs.sh
       dest: /usr/bin/startcloudwatchlogs.sh
-      content: |
-        #!/bin/sh
-        # Get the instance region and inject it in the conf
-        REGION=$(ec2metadata --availability-zone | head -c-2)
-        sed -i -e 's/.*region.*/region = '$REGION'/' /var/awslogs/etc/aws.conf
-        # Restart the awslogs agent
-        service awslogs restart
+      mode: 0755
 
   - name: Cloudwatch logs config
     copy:
