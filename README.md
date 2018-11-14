@@ -25,20 +25,11 @@ Requires AWS environment variables to be set. Builds CentOS Linux 7 image with A
 
 ## Additional Scripts
 
-### `acl_backload_data_move.sh`
-Bash script for moving CSV files. <br>
+### `./scripts/acl_backup.sh`
+Bash script for copying ACL DB file to S3. <br>
 
-### `ecosystem.config.js`
-PM2 configuration file. <br>
+### `./scripts/oag_backup.sh`
+Bash script for copying OAG DB file to S3. <br>
 
-### `oag_backload_data_move.sh`
-Shell script for moving XML files. <br>
-
-### `startcloudwatchlogs.sh`
-Shell script for  AWS Cloudwatch configuration.<br>
-
-
-
-
-
-
+### `./scripts/acl_oag_download.sh`
+Bash script for downloading ACL and OAG DB files from S3 upon server creation. <br>
