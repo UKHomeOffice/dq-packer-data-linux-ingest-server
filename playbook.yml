@@ -480,3 +480,17 @@
       name: Start awslogs
       special_time: reboot
       job: /usr/bin/startcloudwatchlogs.sh
+
+  - name: Add directories to Logrotate
+    blockinfile:
+      dest: /etc/logrotate.conf
+      insertafter: EOF
+      line: |
+        /ADT/log/ {
+        missingok
+        rotate 7
+        }
+        /NATS/log {
+        missingok
+        rotate 7
+        }
