@@ -335,7 +335,7 @@
 
   - name: Copy scripts to /ADT/scripts
     copy:
-      src: scripts/'{{ item.src }}'
+      src: scripts/{{ item.src }}
       dest: /ADT/scripts
       owner: wherescape
       group: SSM
@@ -453,6 +453,16 @@
         [/Centos_Server/datatransfer-oag-to-s3-archive]
         file = /appdata/data-transfer/oag-to-s3-archive.log
         log_group_name = /Centos_Server/datatransfer-oag-to-s3-archive
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/oag_db_backup]
+        file = /ADT/log/oag_backup_*.log
+        log_group_name = /Centos_Server/oag_db_backup
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/acl_db_backup]
+        file = /ADT/log/acl_backup_*.log
+        log_group_name = /Centos_Server/acl_db_backup
         log_stream_name = {instance_id}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
 
