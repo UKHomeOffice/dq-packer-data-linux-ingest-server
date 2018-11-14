@@ -393,12 +393,6 @@
       dest: /tmp/awslogs-agent-setup.py
       mode: "+x"
 
-  - name: Copy Cloudwatch logs file
-    copy:
-      src: scripts/startcloudwatchlogs.sh
-      dest: /usr/bin/startcloudwatchlogs.sh
-      mode: 0755
-
   - name: Cloudwatch logs config
     copy:
       dest: /tmp/cwlogs.conf
@@ -407,63 +401,63 @@
         state_file = /var/awslogs/state/agent-state
         [/var/log/messages]
         file = /var/log/messages
-        log_group_name = /dataingest/linux
-        log_stream_name = {instance_id}
+        log_group_name = /Centos_Server/messages
+        log_stream_name = {hostname}
         datetime_format = %b %d %H:%M:%S
         [/Centos_Server/cloud-init]
         file = /var/log/cloud-init.log
         log_group_name = /Centos_Server/cloud-init
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/cron]
         file = /var/log/cron
         log_group_name = /Centos_Server/cron
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/secure]
         file = /var/log/secure
         log_group_name = /Centos_Server/secure
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/yum]
         file = /var/log/yum.log
         log_group_name = /Centos_Server/yum
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/freshclam]
         file = /var/log/freshclam.log
         log_group_name = /Centos_Server/freshclam
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/datatransfer-acl-to-s3-archive]
         file = /appdata/data-transfer/acl-to-s3-archive.log
         log_group_name = /Centos_Server/datatransfer-acl-to-s3
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/datatransfer-nats-to-s3-archive]
         file = /appdata/data-transfer/nats-to-s3-archive.log
         log_group_name = /Centos_Server/datatransfer-nats-to-s3-archive
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/datatransfer-nats-to-s3-ga]
         file = /appdata/data-transfer/nats-to-s3-ga.log
         log_group_name = /Centos_Server/datatransfer-nats-to-s3-ga
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/datatransfer-oag-to-s3-archive]
         file = /appdata/data-transfer/oag-to-s3-archive.log
         log_group_name = /Centos_Server/datatransfer-oag-to-s3-archive
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/oag_db_backup]
         file = /ADT/log/oag_backup_*.log
         log_group_name = /Centos_Server/oag_db_backup
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/acl_db_backup]
         file = /ADT/log/acl_backup_*.log
         log_group_name = /Centos_Server/acl_db_backup
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
 
   - name: Install cloudwatch log agent
@@ -473,11 +467,20 @@
     args:
       creates: /var/awslogs/etc/aws.conf
 
+  - name: Copy Cloudwatch logs file
+    copy:
+      src: scripts/startcloudwatchlogs.sh
+      dest: /usr/bin/startcloudwatchlogs.sh
+      owner: root
+      group: root
+      mode: 0755      
+
   - name: Make Cron Job to start awslogs with right region
     cron:
       name: Start awslogs
       special_time: reboot
       job: /usr/bin/startcloudwatchlogs.sh
+      state: present
 
   - name: Add directories to Logrotate
     blockinfile:
