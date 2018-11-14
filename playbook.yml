@@ -335,7 +335,7 @@
 
   - name: Copy scripts to /ADT/scripts
     copy:
-      src: ./scripts/'{{ item.src }}'
+      src: scripts/'{{ item.src }}'
       dest: /ADT/scripts
       owner: wherescape
       group: SSM
@@ -395,7 +395,7 @@
 
   - name: Copy Cloudwatch logs file
     copy:
-      src: ./scripts/startcloudwatchlogs.sh
+      src: scripts/startcloudwatchlogs.sh
       dest: /usr/bin/startcloudwatchlogs.sh
       mode: 0755
 
