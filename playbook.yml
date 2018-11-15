@@ -289,7 +289,7 @@
     shell: cd /appdata/data-transfer && \
            source ~/.virtualenvs/data-transfer/bin/activate && \
            export PYTHONPATH=. && \
-           pm2 start -u wherescape ecosystem.config.js -- $DATA_ARCHIVE_BUCKET_NAME $GA_BUCKET_NAME $GA_BUCKET_ACCESS_KEY_ID $GA_BUCKET_SECRET_ACCESS_KEY
+           pm2 start -u wherescape ecosystem.config.js - $DATA_ARCHIVE_BUCKET_NAME $GA_BUCKET_NAME $GA_BUCKET_ACCESS_KEY_ID $GA_BUCKET_SECRET_ACCESS_KEY
     become: true
     become_user: wherescape
 
@@ -473,7 +473,7 @@
       dest: /usr/bin/startcloudwatchlogs.sh
       owner: root
       group: root
-      mode: 0755      
+      mode: 0755
 
   - name: Make Cron Job to start awslogs with right region
     cron:
