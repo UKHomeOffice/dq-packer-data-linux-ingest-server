@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-set -x
 
 cd /appdata/data-transfer
 source ~/.virtualenvs/data-transfer/bin/activate
