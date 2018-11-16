@@ -329,6 +329,7 @@
       - { src: acl_backup.sh }
       - { src: acl_oag_download.sh }
       - { src: oag_backup.sh }
+      - { src: pm2_startup.sh }
 
   - name: Set permissions of /appdata/ADT/scripts to wherescape for log files
     file:
