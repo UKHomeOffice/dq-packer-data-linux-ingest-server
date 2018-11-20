@@ -349,7 +349,7 @@
     with_items:
         - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: sh -c ". /etc/profile.d/script_envs.sh && cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
         - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: sh -c "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && python ftp_acl_web02.py" }
-        - { name: Cron sftp_oag_client_maytech.py, user: wherescape, minute: "*/2",  hour: "*", day: "*",  job: sh -c  "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && python sftp_oag_client_maytech.py > /dev/null 2>" }
+        - { name: Cron sftp_oag_client_maytech.py, user: wherescape, minute: "*/2",  hour: "*", day: "*",  job: sh -c  "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && python sftp_oag_client_maytech.py > /dev/null 2> /dev/null" }
         - { name: Cron OAG Backups, user: wherescape, minute: "*/5", hour: "*", day: "*", job: sh -c "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && ./oag_backup.sh > /ADT/log/oag_backup_$(date +\%Y\%m\%d_\%H-\%M).log 2>&1" }
         - { name: Cron ACL Backups, user: wherescape, minute: "*/5", hour: "*", day: "*", job: sh -c "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && ./acl_backup.sh > /ADT/log/acl_backup_$(date +\%Y\%m\%d_\%H-\%M).log 2>&1" }
 
