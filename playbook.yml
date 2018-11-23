@@ -263,6 +263,7 @@
     with_items:
       - systemctl start clamd@scan
       - systemctl enable clamd@scan
+    become: true  
 
   - name: Add Wherescape user to clamscan group now it exists
     user:
