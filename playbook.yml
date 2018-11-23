@@ -191,10 +191,11 @@
       - yum update -y
       - yum install -y postgresql96
 
-  - name: Set permissions of /var/log/*.log to wherescape for log files
-    file:
-      path: /var/log/{{ item.src }}
-      state: touch
+  - name: Create and set permissions of /var/log/*.log to wherescape for log files
+    copy:
+      content: ""
+      dest: /var/log/{{ item.src }}
+      force: no
       owner: wherescape
       group: SSM
       mode: 0775
