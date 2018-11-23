@@ -199,9 +199,9 @@
       owner: wherescape
       group: SSM
       mode: 0775
-      with_items:
-        - { src: freshclam.log }
-        - { src: clamd.scan }
+    with_items:
+      - { src: freshclam.log }
+      - { src: clamd.scan }
 
   - name: ClamAV Install Packages
     shell: '{{ item }}'
