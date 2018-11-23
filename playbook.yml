@@ -193,14 +193,14 @@
 
   - name: Set permissions of /var/log/*.log to wherescape for log files
     file:
-      path: /var/log/{{ item }}
+      path: /var/log/{{ item.src }}
       state: touch
       owner: wherescape
       group: SSM
       mode: 0775
       with_items:
-        - freshclam.log
-        - clamd.scan
+        - { src: freshclam.log }
+        - { src: clamd.scan }
 
   - name: ClamAV Install Packages
     shell: '{{ item }}'
