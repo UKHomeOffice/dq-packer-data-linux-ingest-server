@@ -191,6 +191,17 @@
       - yum update -y
       - yum install -y postgresql96
 
+  - name: Set permissions of /var/log/*.log to wherescape for log files
+    file:
+      path: /var/log/{{ item }}
+      state: touch
+      owner: wherescape
+      group: SSM
+      mode: 0775
+      with_items:
+        - freshclam.log
+        - clamd.scan
+
   - name: ClamAV Install Packages
     shell: '{{ item }}'
     with_items:
@@ -248,6 +259,15 @@
       name: wherescape
       groups: clamscan
       append: yes
+
+  - name: Set permissions on ClamD socket
+    file:
+      path: /var/run/clamd.scan
+      state: directory
+      owner: wherescape
+      group: SSM
+      mode: 0775
+      recurse: yes
 
   - name: Clone Data Transfer from Github
     git:
@@ -415,6 +435,11 @@
         log_group_name = /Centos_Server/freshclam
         log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/clamd.scan]
+        file = /var/log/clamd.scan
+        log_group_name = /Centos_Server/clamd.scan
+        log_stream_name = {hostname}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/datatransfer-acl-to-s3-archive]
         file = /appdata/data-transfer/acl-to-s3-archive.log
         log_group_name = /Centos_Server/datatransfer-acl-to-s3
@@ -443,6 +468,21 @@
         [/Centos_Server/acl_db_backup]
         file = /ADT/log/acl_backup_*.log
         log_group_name = /Centos_Server/acl_db_backup
+        log_stream_name = {hostname}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/sftp_NATS]
+        file = /ADT/log/sftp_nats_*.log
+        log_group_name = /Centos_Server/sftp_NATS
+        log_stream_name = {hostname}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/sftp_OAG]
+        file = /ADT/log/sftp_oag_maytech.log
+        log_group_name = /Centos_Server/sftp_OAG
+        log_stream_name = {hostname}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/ftp_ACL]
+        file = /ADT/log/ftp_acl.log
+        log_group_name = /Centos_Server/ftp_ACL
         log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
 
