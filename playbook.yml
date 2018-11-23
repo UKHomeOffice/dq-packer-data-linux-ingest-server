@@ -263,13 +263,28 @@
     with_items:
       - systemctl start clamd@scan
       - systemctl enable clamd@scan
-    become: true  
+    become: true
 
   - name: Add Wherescape user to clamscan group now it exists
     user:
       name: wherescape
       groups: clamscan
       append: yes
+
+  - name: Copy ClamAV permissions script
+    copy:
+      src: scripts/clamav_permissions.sh
+      dest: /usr/bin/clamav_permissions.sh
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Make Cron Job to set permissions at each reboot
+    cron:
+      name: Set ClamAV permissions
+      special_time: reboot
+      job: /usr/bin/clamav_permissions.sh
+      state: present      
 
   - name: Clone Data Transfer from Github
     git:
