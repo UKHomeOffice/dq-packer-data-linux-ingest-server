@@ -249,6 +249,15 @@
       - systemctl start freshclam
       - systemctl enable freshclam
 
+  - name: Set permissions on ClamD socket
+    file:
+      path: /var/run/clamd.scan
+      state: directory
+      owner: wherescape
+      group: SSM
+      mode: 0775
+      recurse: yes
+
   - name: Start, Enable Clamd
     shell: '{{ item }}'
     with_items:
@@ -260,15 +269,6 @@
       name: wherescape
       groups: clamscan
       append: yes
-
-  - name: Set permissions on ClamD socket
-    file:
-      path: /var/run/clamd.scan
-      state: directory
-      owner: wherescape
-      group: SSM
-      mode: 0775
-      recurse: yes
 
   - name: Clone Data Transfer from Github
     git:
