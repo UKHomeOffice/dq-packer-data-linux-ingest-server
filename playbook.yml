@@ -284,7 +284,7 @@
       name: Set ClamAV permissions
       special_time: reboot
       job: /usr/bin/clamav_permissions.sh
-      state: present      
+      state: present
 
   - name: Clone Data Transfer from Github
     git:
@@ -365,7 +365,6 @@
     with_items:
       - { src: acl_backup.sh }
       - { src: acl_oag_download.sh }
-      - { src: oag_backup.sh }
       - { src: pm2_startup.sh }
 
   - name: Set permissions of /appdata/ADT/scripts to wherescape for log files
@@ -386,8 +385,6 @@
     with_items:
         - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: sh -c ". /etc/profile.d/script_envs.sh && cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
         - { name: Cron ftp_acl_web02.py, user: wherescape, minute: "*/10",  hour: "0", day: "*",  job: sh -c "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && python ftp_acl_web02.py" }
-        - { name: Cron sftp_oag_client_maytech.py, user: wherescape, minute: "*/2",  hour: "*", day: "*",  job: sh -c  "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && python sftp_oag_client_maytech.py > /dev/null 2> /dev/null" }
-        - { name: Cron OAG Backups, user: wherescape, minute: "*/5", hour: "*", day: "*", job: sh -c "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && ./oag_backup.sh > /ADT/log/oag_backup_$(date +\%Y\%m\%d_\%H-\%M).log 2>&1" }
         - { name: Cron ACL Backups, user: wherescape, minute: "*/5", hour: "*", day: "*", job: sh -c "#NotRunning#. /etc/profile.d/script_envs.sh && cd /ADT/scripts && ./acl_backup.sh > /ADT/log/acl_backup_$(date +\%Y\%m\%d_\%H-\%M).log 2>&1" }
 
   - name: Set DNS Resolver Options
@@ -477,9 +474,9 @@
         log_group_name = /Centos_Server/datatransfer-oag-to-s3-archive
         log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
-        [/Centos_Server/oag_db_backup]
-        file = /ADT/log/oag_backup_*.log
-        log_group_name = /Centos_Server/oag_db_backup
+        [/Centos_Server/datatransfer-oag-from-s3-local]
+        file = /appdata/data-transfer/oag-from-s3-local.log
+        log_group_name = /Centos_Server/datatransfer-oag-from-s3-local
         log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/acl_db_backup]
@@ -490,11 +487,6 @@
         [/Centos_Server/sftp_NATS]
         file = /ADT/log/sftp_nats_*.log
         log_group_name = /Centos_Server/sftp_NATS
-        log_stream_name = {hostname}
-        datetime_format = %Y-%m-%d %H:%M:%S,%f
-        [/Centos_Server/sftp_OAG]
-        file = /ADT/log/sftp_oag_maytech.log
-        log_group_name = /Centos_Server/sftp_OAG
         log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/ftp_ACL]
