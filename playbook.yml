@@ -364,7 +364,7 @@
       mode: 0775
     with_items:
       - { src: acl_backup.sh }
-      - { src: acl_oag_download.sh }
+      - { src: acl_download.sh }
       - { src: pm2_startup.sh }
 
   - name: Set permissions of /appdata/ADT/scripts to wherescape for log files
