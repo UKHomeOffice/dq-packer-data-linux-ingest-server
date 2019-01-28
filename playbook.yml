@@ -154,6 +154,7 @@
       - unixODBC-devel
       - gcc-c++
       - python-devel
+      - pyodbc
 
   - name: Install Python 2.7
     unarchive:
@@ -176,7 +177,6 @@
       - ftputil
       - virtualenv
       - psycopg2-binary
-      - pyodbc
     become: true
 
   - name: GET config files from DQ-config-bucket
