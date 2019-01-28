@@ -21,12 +21,3 @@ Drone CI/CD configuration which builds the Packer image on push to master.
 ### `packer.json`
 
 Requires AWS environment variables to be set. Builds CentOS Linux 7 image with Ansible playbook configuration.
-
-
-## Additional Scripts
-
-### `./scripts/acl_backup.sh`
-Bash script for copying ACL DB file to S3. <br>
-
-### `./scripts/acl_download.sh`
-Bash script for downloading ACL DB files from S3 upon server creation. <br>
