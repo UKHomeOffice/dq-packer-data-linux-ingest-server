@@ -31,7 +31,6 @@
     with_items:
       - ADT
       - EF
-      - NATS
       - appdata
       - appdata/ADT
       - appdata/ADT/archive
@@ -63,19 +62,6 @@
       - appdata/EF/keys
       - appdata/EF/log
       - appdata/EF/scripts
-      - appdata/NATS
-      - appdata/NATS/archive
-      - appdata/NATS/archive/nats
-      - appdata/NATS/data
-      - appdata/NATS/data/nats
-      - appdata/NATS/data/ga
-      - appdata/NATS/log
-      - appdata/NATS/quarantine
-      - appdata/NATS/quarantine/nats
-      - appdata/NATS/scripts
-      - appdata/NATS/stage
-      - appdata/NATS/stage/maytech
-      - appdata/NATS/stage/nats
 
   - file:
       src: /appdata/ADT
@@ -88,14 +74,6 @@
   - file:
       src: /appdata/EF
       dest: /EF
-      force: yes
-      owner: wherescape
-      group: SSM
-      state: link
-
-  - file:
-      src: /appdata/NATS
-      dest: /NATS
       force: yes
       owner: wherescape
       group: SSM
@@ -330,24 +308,7 @@
       clone: yes
       update: no
     with_items:
-      - { repo: 'https://github.com/UKHomeOffice/dq_sftp-nats-dmz/', dest: '/opt/dq_sftp-nats-dmz' }
       - { repo: 'https://github.com/UKHomeOffice/dq-ssm_ingest/', dest: '/opt/dq-ssm_ingest' }
-    become: true
-
-  - name: Symlink script files in opt
-    file:
-      src: "{{ item.src }}"
-      dest: "{{ item.dest }}"
-      force: yes
-      state: link
-    with_items:
-      - { src: '/opt/dq_sftp-nats-dmz/NATS/scripts/', dest: '/appdata/NATS/scripts'}
-
-  - name: Update NATS permissions to wherescape user
-    shell: "{{ item }}"
-    with_items:
-      - setfacl -m u:wherescape:rwx /NATS/scripts
-      - setfacl -m u:wherescape:rwx /NATS/scripts/check_run.sh
     become: true
 
   - name: Copy SSM Ingest files to ADT
@@ -372,16 +333,6 @@
       group: SSM
       mode: 0775
       recurse: yes
-
-  - name: '{{ item.name }}'
-    cron:
-      user: '{{ item.user }}'
-      minute: '{{ item.minute }}'
-      hour: '{{ item.hour }}'
-      day: '{{ item.day }}'
-      job: '{{ item.job }}'
-    with_items:
-        - { name: Cron sftp_nats_client_maytech.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: sh -c ". /etc/profile.d/script_envs.sh && cd /NATS/scripts && ./check_run.sh ./sftp_nats_client_maytech.py > /dev/null 2> /dev/null" }
 
   - name: Set DNS Resolver Options
     blockinfile:
@@ -460,16 +411,6 @@
         log_group_name = /Centos_Server/datatransfer-acl-to-s3
         log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
-        [/Centos_Server/datatransfer-nats-to-s3-archive]
-        file = /appdata/data-transfer/nats-to-s3-archive.log
-        log_group_name = /Centos_Server/datatransfer-nats-to-s3-archive
-        log_stream_name = {hostname}
-        datetime_format = %Y-%m-%d %H:%M:%S,%f
-        [/Centos_Server/datatransfer-nats-to-s3-ga]
-        file = /appdata/data-transfer/nats-to-s3-ga.log
-        log_group_name = /Centos_Server/datatransfer-nats-to-s3-ga
-        log_stream_name = {hostname}
-        datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/datatransfer-oag-from-s3-local]
         file = /appdata/data-transfer/oag-from-s3-local.log
         log_group_name = /Centos_Server/datatransfer-oag-from-s3-local
@@ -478,11 +419,6 @@
         [/Centos_Server/datatransfer-oag-to-s3-archive]
         file = /appdata/data-transfer/oag-to-s3-archive.log
         log_group_name = /Centos_Server/datatransfer-oag-to-s3-archive
-        log_stream_name = {hostname}
-        datetime_format = %Y-%m-%d %H:%M:%S,%f
-        [/Centos_Server/sftp_NATS]
-        file = /ADT/log/sftp_nats_*.log
-        log_group_name = /Centos_Server/sftp_NATS
         log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
 
@@ -514,10 +450,6 @@
       insertafter: EOF
       block: |
         /ADT/log/ {
-        missingok
-        rotate 7
-        }
-        /NATS/log {
         missingok
         rotate 7
         }
